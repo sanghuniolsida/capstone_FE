@@ -12,10 +12,6 @@ const Header = () => {
       <header className="header">
         <div className="top-bar">
           <h1 className="center-title">MOIPZY</h1>
-          <div className="right-buttons">
-            <button className="login-button">Sign In</button>
-            <button className="signup-button">Sign Up</button>
-          </div>
         </div>
       </header>
     </div>

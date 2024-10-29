@@ -1,0 +1,61 @@
+/* src/components/Header.css */
+
+.container {
+  display: flex;
+}
+
+.left-vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  padding: 30px;
+  font-size: 30px;
+  height: 100vh; /* 화면 전체 높이 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.left-vertical-text span {
+  margin-bottom: 20px; /* 각 글자 간 간격 */
+}
+
+.header {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  padding: 10px 20px;
+  position: relative;
+  border-bottom: 1px solid black;
+}
+
+.center-title {
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.right-buttons {
+  position: absolute;
+  right: 20px;
+}
+
+.login-button,
+.signup-button {
+  margin-left: 10px;
+  font-size: 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.login-button:hover,
+.signup-button:hover {
+  text-decoration: underline;
+}
