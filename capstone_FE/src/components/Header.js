@@ -1,6 +1,7 @@
 // src/components/Header.js
 
 import React from 'react';
+import { Link } from 'react-router-dom'; // Link 컴포넌트 가져오기
 import './Header.css';
 
 const Header = () => {
@@ -13,8 +14,12 @@ const Header = () => {
         <div className="top-bar">
           <h1 className="center-title">MOIPZY</h1>
           <div className="right-buttons">
-            <button className="login-button">Sign In</button>
-            <button className="signup-button">Sign Up</button>
+            <Link to="/login">
+              <button className="login-button">Sign In</button>
+            </Link>
+            <Link to="/signup">
+              <button className="signup-button">Sign Up</button>
+            </Link>
           </div>
         </div>
       </header>

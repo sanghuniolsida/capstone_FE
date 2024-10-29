@@ -29,7 +29,7 @@
 .top-bar {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: center; /* 제목을 중앙에 배치 */
   width: 90%;
   padding: 10px 20px;
   position: relative;
@@ -43,19 +43,35 @@
 
 .right-buttons {
   position: absolute;
-  right: 20px;
+  right: 0; /* 오른쪽 끝에 배치 */
+  display: flex;
+  gap: 10px;
 }
 
-.login-button,
-.signup-button {
-  margin-left: 10px;
-  font-size: 18px;
-  background: none;
-  border: none;
+.login-button {
+  padding: 20px 20px !important;
+  font-size: 16px ;
   cursor: pointer;
+  background-color: #333 ;
+  color: white ;
+  border: none ;
+  border-radius: 10px !important;
+  width: 100px !important;
+  text-align: center;
 }
 
+.signup-button {
+  padding: 20px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  width: 100px;
+  text-align: center;
+}
 .login-button:hover,
 .signup-button:hover {
-  text-decoration: underline;
+  background-color: #555;
 }
