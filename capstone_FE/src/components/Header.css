@@ -91,8 +91,23 @@
   animation: spin 4s linear infinite; /* 회전 애니메이션 */
 }
 
+/* 비 내리는 아이콘 스타일 */
+.rain-icon {
+  font-size: 24px;
+  color: #00BFFF; /* 파란색으로 비 표현 */
+  display: inline-block;
+  margin-bottom: 5px;
+  animation: rain-fall 1.5s linear infinite; /* 빗방울 떨어지는 애니메이션 */
+}
+
 /* 회전 애니메이션 정의 */
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* 빗방울 떨어지는 애니메이션 */
+@keyframes rain-fall {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(10px); opacity: 0; } /* 아래로 떨어지면서 사라짐 */
 }

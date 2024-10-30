@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaSun } from 'react-icons/fa'; // 태양 아이콘 추가
+import { FaSun, FaCloudRain } from 'react-icons/fa'; // 태양 및 비 아이콘 추가
 import './Header.css';
 
 const Header = ({ children }) => {
@@ -33,6 +33,7 @@ const Header = ({ children }) => {
           <span>서</span>
           <span>비</span>
           <span>스</span>
+          <span className="rain-icon"><FaCloudRain /></span> {/* 비 내리는 아이콘 */}
         </div>
       </aside>
 
