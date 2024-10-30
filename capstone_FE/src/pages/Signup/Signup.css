@@ -1,0 +1,67 @@
+/* src/pages/Signup/Signup.css */
+
+/* 메인 컨텐츠 영역을 화면 중앙에 배치 */
+.main-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 80px); /* Header 아래 남은 전체 높이를 차지 */
+}
+
+/* 회원가입 폼 전체 컨테이너 */
+.signup-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 400px;
+  text-align: center;
+  margin-bottom: 200px;
+  margin-right: 150px;
+}
+
+/* 제목 스타일 */
+.signup-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* 회원가입 폼의 각 항목을 세로로 배치 */
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+}
+
+/* 각 라벨 스타일 */
+.signup-form label {
+  font-size: 20px;
+  margin-top: 18px;
+  text-align: left;
+}
+
+/* 이메일 및 비밀번호 입력 필드 스타일 */
+.signup-form input {
+  padding: 10px;
+  margin-top: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+/* 회원가입 버튼 스타일 */
+.signup-button {
+  margin-top: 20px;
+  padding: 10px;
+  font-size: 18px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.signup-button:hover {
+  background-color: #555;
+}

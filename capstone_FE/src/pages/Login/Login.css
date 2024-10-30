@@ -1,95 +1,101 @@
-.login-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+/* src/pages/Login/Login.css */
 
-.login-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 800px;
-  margin-top: 40px;
-}
-
-.login-form {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.login-form label {
-  margin-top: 15px;
-  font-size: 26px; /* 글자 크기를 키우기 */
-}
-
-.login-form input {
-  padding: 20px; /* 기존보다 여유롭게 */
-  margin-top: 15px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 20px; /* 글자 크기 키우기 */
-  width: 100%; /* 폼 너비를 부모 컨테이너에 맞게 설정 */
-}
-
-
-.button-container {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px; /* 버튼 위 여백 조절 */
-}
-
-.login-button,
-.google-login-button {
-  padding: 10px;
-  font-size: 18px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  width: 48%; /* 버튼 너비를 절반으로 조정 */
-}
-
-.login-button {
-  background-color: #333;
-  color: white;
-}
-
-.google-login-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #4285F4;
-  color: white;
-  padding: 10px;
-  font-size: 18px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  width: 48%;
-}
-
-.google-icon {
-  margin-right: 8px; /* 아이콘과 텍스트 간의 간격 */
-  font-size: 20px; /* 아이콘 크기 */
-}
-
-.google-login-button:hover {
-  background-color: #357ae8; /* hover 시 조금 어두운 색상으로 변경 */
-}
-
-.login-button:hover {
-  background-color: #555;
-}
-
-.forgot-password {
-  margin-top: 20px;
-  font-size: 20px;
-  color: #555;
-  text-decoration: underline;
-  cursor: pointer;
-  align-self: flex-start; /* 왼쪽 정렬 */
-}
-
-.forgot-password:hover {
-  color: #333;
-}
+/* 메인 컨텐츠를 화면 중앙에 배치 */
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 80px); /* Header 아래 남은 전체 높이를 차지 */
+  }
+  
+  /* 로그인 폼 전체 컨테이너 */
+  .login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 400px;
+    text-align: center;
+    margin-bottom: 200px;
+    margin-right: 150px;
+  }
+  
+  /* 로그인 폼의 각 항목을 세로로 배치 */
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    width: 130%;
+  }
+  
+  /* 각 라벨 스타일 */
+  .login-form label {
+    font-size: 20px;
+    margin-top: 18px;
+    text-align: left;
+  }
+  
+  /* 이메일 및 비밀번호 입력 필드 스타일 */
+  .login-form input {
+    padding: 10px;
+    margin-top: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  /* 버튼 컨테이너: 로그인 버튼과 구글 로그인 버튼을 가로로 배치 */
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  /* 일반 로그인 버튼 스타일 */
+  .login-button {
+    padding: 10px;
+    font-size: 16px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 48%;
+  }
+  
+  .login-button:hover {
+    background-color: #555;
+  }
+  
+  /* 구글 로그인 버튼 스타일 */
+  .google-login-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #4285F4;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 48%;
+  }
+  
+  /* 구글 아이콘 크기와 간격 조절 */
+  .google-icon {
+    font-size: 20px;
+    margin-right: 8px;
+  }
+  
+  .google-login-button:hover {
+    background-color: #357ae8;
+  }
+  
+  /* 비밀번호 찾기 링크 스타일 */
+  .forgot-password {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #555;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  

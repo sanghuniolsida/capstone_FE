@@ -1,77 +1,98 @@
 /* src/components/Header.css */
 
-.container {
-  display: flex;
+.header-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr; /* 왼쪽 영역 200px, 나머지 컨텐츠 */
+    grid-template-rows: auto 1fr; /* 상단 헤더, 아래 컨텐츠 */
+    grid-template-areas:
+      "header-top header-top"
+      "left-sidebar main-content";
+    height: 100vh;
+  }
+
+.header-top {
+    grid-area: header-top;
+    display: flex;
+    justify-content: center; /* 기본 중앙 정렬 */
+    align-items: center;
+    padding: 20px;
+    border-bottom: 2px solid black;
+    padding-bottom: 40px;  /*검은색 선을 아래로 내리도록!*/
+    position: relative;
+  }
+  
+  .title {
+    font-size: 35px;
+    font-weight: bold;
+    position: absolute; /* 페이지 중앙에 고정 */
+    left: 50%;
+    transform: translateX(-50%); /* 정확히 중앙으로 이동 */
+    top: 10px;
+    margin: 0;
+  }
+  
+  .auth-buttons {
+    position: absolute;
+    right: 0; /* 오른쪽 끝에 버튼 배치 */
+    top: 20px;
+    display: flex;
+    gap: 0px;
+  }
+  
+  
+  .header-button {
+    font-size: 16px;
+    color: #333;
+    text-decoration: none;
+    padding: 5px 10px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    margin-right: 15px;
+  }
+  
+  .header-button:hover {
+    background-color: #333;
+    color: white;
+  }
+  
+  .left-sidebar {
+    grid-area: left-sidebar;
+    background-color: #fffcfc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .vertical-text {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .vertical-text span {
+    margin-bottom: 15px; /*날씨기반옷차림추천 문구 간격 조정*/
+  }
+  
+  .main-content {
+    grid-area: main-content;
+    padding: 20px;
+  }
+  
+  /* 태양 아이콘 스타일 */
+.sun-icon {
+  font-size: 24px; /* 아이콘 크기 */
+  color: #FFA500; /* 태양 색상 */
+  display: inline-block;
+  margin-bottom: 5px; /* "날" 글자 위에 위치 */
+  animation: spin 4s linear infinite; /* 회전 애니메이션 */
 }
 
-.left-vertical-text {
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  padding: 30px;
-  font-size: 30px;
-  height: 100vh; /* 화면 전체 높이 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.left-vertical-text span {
-  margin-bottom: 20px; /* 각 글자 간 간격 */
-}
-
-.header {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.top-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center; /* 제목을 중앙에 배치 */
-  width: 90%;
-  padding: 10px 20px;
-  position: relative;
-  border-bottom: 1px solid black;
-}
-
-.center-title {
-  font-size: 30px;
-  font-weight: bold;
-}
-
-.right-buttons {
-  position: absolute;
-  right: 0; /* 오른쪽 끝에 배치 */
-  display: flex;
-  gap: 10px;
-}
-
-.login-button {
-  padding: 20px 20px !important;
-  font-size: 16px ;
-  cursor: pointer;
-  background-color: #333 ;
-  color: white ;
-  border: none ;
-  border-radius: 10px !important;
-  width: 100px !important;
-  text-align: center;
-}
-
-.signup-button {
-  padding: 20px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  background-color: #333;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  width: 100px;
-  text-align: center;
-}
-.login-button:hover,
-.signup-button:hover {
-  background-color: #555;
+/* 회전 애니메이션 정의 */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
