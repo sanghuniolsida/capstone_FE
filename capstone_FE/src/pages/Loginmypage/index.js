@@ -1,11 +1,18 @@
-import React from 'react'
+// src/pages/country/index.js
 
-const index = () => {
+import React from 'react';
+import Sidebar from '../../components2/Sidebar';
+import './Loginmypage.css';
+
+const Loginmypage = () => {
   return (
-    <div>
-      로그인 후 홈페이지
-    </div>
-  )
-}
+    <Sidebar>
+      <div className="loginmypage-content">
+        {/* 여기에 Loginmypage 페이지의 주요 컨텐츠를 추가하세요 */}
+        <h2>Loginmypage</h2>
+      </div>
+    </Sidebar>
+  );
+};
 
-export default index
+export default Loginmypage;

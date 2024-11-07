@@ -1,0 +1,93 @@
+/* src/components2/Sidebar.css */
+
+.header-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr; /* 왼쪽 영역 200px, 나머지 컨텐츠 */
+    grid-template-rows: auto 1fr; /* 상단 헤더, 아래 컨텐츠 */
+    grid-template-areas:
+      "header-top header-top"
+      "left-sidebar main-content";
+    height: 100vh;
+  }
+
+.header-top {
+    grid-area: header-top;
+    display: flex;
+    justify-content: center; /* 기본 중앙 정렬 */
+    align-items: center;
+    padding: 20px;
+    border-bottom: 2px solid black;
+    padding-bottom: 40px;  /*검은색 선을 아래로 내리도록!*/
+    position: relative;
+  }
+  
+  .title {
+    font-size: 35px;
+    font-weight: bold;
+    position: absolute; /* 페이지 중앙에 고정 */
+    left: 50%;
+    transform: translateX(-50%); /* 정확히 중앙으로 이동 */
+    top: 10px;
+    margin: 0;
+  }
+
+.sidebar {
+    width: 200px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #ddd;
+    margin-top: 25px;
+  }
+  
+  .sidebar-item {
+    font-size: 20px;
+    color: black;
+    text-decoration: none;
+    margin-bottom: 50px;
+  }
+  
+  .sidebar-item:hover {
+    font-weight: bold;
+  }
+  
+  .dropdown {
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .dropdown-content {
+    display: none;
+    flex-direction: column;
+    padding-left: 10px;
+  }
+  
+  .dropdown:hover .dropdown-content {
+    display: flex;
+  }
+  
+  .dropdown-item {
+    font-size: 16px;
+    color: black;
+    text-decoration: none;
+    margin-top: 5px;
+    padding-left: 10px;
+  }
+  
+  .dropdown-item:hover {
+    font-weight: bold;
+  }
+
+  .sidebar-icon {
+    margin-right: 8px;
+    font-size: 18px;
+    transition: transform 1s ease, font-size 1s ease; /* 일반 상태의 크기와 이동 */
+  }
+
+  .sidebar-icon.flying {
+    font-size: 40px; /* 아이콘 크기를 증가 */
+    transform: translate(100px, -100px) rotate(45deg); /* 대각선 방향으로 이동 및 회전 */
+  }
+
+  

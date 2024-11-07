@@ -1,11 +1,18 @@
-import React from 'react'
+// src/pages/country/index.js
 
-const index = () => {
+import React from 'react';
+import Sidebar from '../../components2/Sidebar';
+import './Country.css';
+
+const Country = () => {
   return (
-    <div>
-      국가
-    </div>
-  )
-}
+    <Sidebar>
+      <div className="country-content">
+        {/* 여기에 country 페이지의 주요 컨텐츠를 추가하세요 */}
+        <h2>Country Page Content</h2>
+      </div>
+    </Sidebar>
+  );
+};
 
-export default index
+export default Country;

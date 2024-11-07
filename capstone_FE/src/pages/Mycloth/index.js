@@ -1,11 +1,18 @@
-import React from 'react'
+// src/pages/country/index.js
 
-const index = () => {
+import React from 'react';
+import Sidebar from '../../components2/Sidebar';
+import './Mycloth.css';
+
+const Mycloth = () => {
   return (
-    <div>
-      내 옷
-    </div>
-  )
-}
+    <Sidebar>
+      <div className="Mycloth-content">
+        {/* 여기에 Mycloth 페이지의 주요 컨텐츠를 추가하세요 */}
+        <h2>Mycloth</h2>
+      </div>
+    </Sidebar>
+  );
+};
 
-export default index
+export default Mycloth;

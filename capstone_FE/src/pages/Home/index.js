@@ -9,8 +9,6 @@ const Home = () => {
       <Header />
       <div className="home-content">
         {/* 3번 영역에 들어갈 내용 작성 */}
-        <h2>Welcome to MOIPZY</h2>
-        <p>여기에 홈 페이지의 주요 내용을 추가하세요.</p>
         {/* 원하는 다른 컴포넌트나 정보를 추가해도 됩니다 */}
       </div>
     </div>
