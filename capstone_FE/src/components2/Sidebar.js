@@ -37,7 +37,7 @@ const Sidebar = ({ children }) => {
           <FaUser className="sidebar-icon" /> 마이 페이지
         </Link>
         <div className="sidebar-item" onClick={handleCountryClick}>
-          <FaPlane className={`sidebar-icon ${isFlying ? 'flying' : ''}`} /> 국가
+          <FaPlane className={`sidebar-icon ${isFlying ? 'flying' : ''}`} /> 여행
         </div>
         <div className="sidebar-item dropdown">
           <FaTshirt className="sidebar-icon" /> 옷장
