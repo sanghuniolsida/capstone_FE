@@ -20,12 +20,11 @@ const Header = ({ children }) => {
       {/* 2번 영역 - 왼쪽 세로 텍스트 */}
       <aside className="left-sidebar">
         <div className="vertical-text">
-        <span className="sun-icon"><FaSun /></span> {/* 태양 아이콘 추가 */}
+          <span className="sun-icon"><FaSun /></span> {/* 태양 아이콘 추가 */}
           <span>날</span><span>씨</span><span>기</span><span>반</span>
           <span>옷</span><span>차</span><span>림</span><span>추</span>
           <span>천</span><span>서</span><span>비</span><span>스</span>
           <span className="rain-icon"><FaCloudRain /></span> {/* 비 내리는 아이콘 */}
-
         </div>
       </aside>
 
