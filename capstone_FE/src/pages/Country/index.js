@@ -15,6 +15,12 @@ const Country = () => {
   const [weatherData, setWeatherData] = useState([]);
   const [error, setError] = useState(null);
 
+  const clothesCategories = {
+    상의: ['상의 이미지1 URL', '상의 이미지2 URL'],
+    하의: ['하의 이미지1 URL', '하의 이미지2 URL'],
+    아우터: ['아우터 이미지1 URL', '아우터 이미지2 URL'],
+  };
+
   const countryCityMap = {
     '일본': ['도쿄', '오사카', '후쿠오카', '삿포로', '교토'],
     '중국': ['베이징', '상하이', '광저우', '시안', '청두'],
@@ -599,6 +605,21 @@ const Country = () => {
         ) : (
           <p>로딩 중...</p>
         )}
+
+        <div className="clothes-recommendation">
+          {Object.keys(clothesCategories).map((category) => (
+            <div key={category} className="clothes-category">
+              <h4>• {category}</h4>
+              <div className="clothes-items">
+                {clothesCategories[category].map((imgSrc, index) => (
+                  <div key={index} className="clothes-item">
+                    <img src={imgSrc} alt={`${category} ${index + 1}`} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </Sidebar>
   );

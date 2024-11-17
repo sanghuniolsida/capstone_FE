@@ -23,5 +23,39 @@
   }
 
 
+  .clothes-recommendation {
+    margin-top: -300px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  .clothes-category {
+    background: #f7e5e5;
+    border-radius: 10px;
+    padding: 15px;
+    flex: 1;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .clothes-category h4 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .clothes-items {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .clothes-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
   
   
