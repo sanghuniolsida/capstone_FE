@@ -1,0 +1,27 @@
+/* Country.css */
+
+/* 전체 날씨 예보 컨테이너 */
+.weather-forecast {
+    display: flex;
+    gap: 10px; 
+    overflow-x: auto; /* 가로 스크롤 가능하도록 설정 */
+    margin-bottom: 400px;
+  }
+  
+  /* 각 날짜별 날씨 카드 */
+  .day-forecast {
+    background-color: #f9f9f9; /* 카드 배경색 */
+    border-radius: 8px; 
+    padding: 10px; 
+    min-width: 120px; 
+    text-align: center; 
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
+  }
+  
+  .weather-text {
+    font-size: 13px;
+  }
+
+
+  
+  
