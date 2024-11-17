@@ -41,11 +41,11 @@ const ClothingRecommendation = ({ temperature }) => {
     <div className="clothing-recommendation">
       <h2>Today's Clothing Recommendation</h2>
       <div className="recommendations">
-        <div className="recommendation1">
-          <p><PiTShirtDuotone className="icon" />추천 1: {recommendation1}</p>
+        <div className="recommendation">
+          <p className="recommendation-text"><PiTShirtDuotone className="icon" />추천 1: {recommendation1}</p>
         </div>
-        <div className="recommendation2">
-          <p><PiPants className="icon" />추천 2: {recommendation2}</p>
+        <div className="recommendation">
+          <p className="recommendation-text"><PiPants className="icon" />추천 2: {recommendation2}</p>
         </div>
       </div>
     </div>

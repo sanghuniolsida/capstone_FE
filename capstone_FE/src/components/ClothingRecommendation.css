@@ -23,20 +23,13 @@
     gap: 0px; /* 추천 1과 추천 2 사이에 간격 추가 */
   }
   
-  
-  .recommendation1 {
-    font-size: 1rem;
-    padding: 10px;
-    text-align: center;
-    margin-left: 0px;
-    margin-bottom: -10px;
+  .recommendation {
+    display: flex;
+    align-items: center;
   }
-  
-  .recommendation2 {
-    font-size: 1rem;
-    padding: 10px;
-    text-align: center;
-    margin-left: -72px;
+
+  .recommendation-text {
+    text-align: left;
   }
 
   .icon {

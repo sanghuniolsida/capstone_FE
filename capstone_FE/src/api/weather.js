@@ -1,3 +1,5 @@
+//src/api/weather.js
+
 import axios from "axios";
 
 const apiKey = process.env.REACT_APP_ACCUWEATHER_KEY;
@@ -19,7 +21,7 @@ export const getLocationAPI = async (lat, lng) => {
 export const getWeatherAPI = async (locationKey) => {
     try {
       const response = await axios.get(
-        `http://dataservice.accuweather.com/currentconditions/v1/2330442?apikey=${apiKey}&language=ko-kr`
+        `http://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${apiKey}&language=ko-kr`
       );
       return response;
     } catch (error) {
@@ -27,3 +29,28 @@ export const getWeatherAPI = async (locationKey) => {
       throw error;
     }
   };
+//하루 전 날씨
+  export const getHistoricalWeatherAPI = async (locationKey) => {
+    try {
+      const response = await axios.get(
+        `http://dataservice.accuweather.com/currentconditions/v1/${locationKey}/historical/24?apikey=${apiKey}&language=ko-kr`
+      );
+      return response;
+    } catch (error) {
+      console.error("과거 날씨 정보를 가져오는 중 오류 발생:", error);
+      throw error;
+    }
+  };
+
+  //내일 날씨
+  export const getTomorrowWeatherAPI = async (locationKey) => {
+  try {
+    const response = await axios.get(
+      `http://dataservice.accuweather.com/forecasts/v1/daily/5day/${locationKey}?apikey=${apiKey}&language=ko-kr`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("내일 날씨 정보를 가져오는 중 오류 발생:", error);
+    throw error;
+  }
+};
