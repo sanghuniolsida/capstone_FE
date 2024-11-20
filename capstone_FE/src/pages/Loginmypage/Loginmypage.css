@@ -1,0 +1,51 @@
+.loginmypage-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .calendar-section {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 250px;
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+    margin-top: 175px;
+    margin-right: 40px;
+  }
+  
+  .clothing-recommendation-section {
+    width: 100%;
+    max-width: 1200px;
+    margin-right: 170px;
+    text-align: center;
+    margin-top: -50px;
+  }
+  
+  .clothing-boxes {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .clothing-box {
+    flex: 1;
+    margin: 0 10px;
+    text-align: center;
+  }
+  
+  .clothing-image {
+    width: 100%;
+    max-width: 150px;
+    height: 400%;
+    margin-top: 10px;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 10px;
+  }
+  

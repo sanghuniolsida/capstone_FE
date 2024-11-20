@@ -195,7 +195,6 @@ const Home = () => {
               </div>
             </div>
 
-            {/* 옷차림 추천 폼 추가 */}
             <ClothingRecommendation temperature={displayedWeather.temperature} />
           </div>
         ) : (
