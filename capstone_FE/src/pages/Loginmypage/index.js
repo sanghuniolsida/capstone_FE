@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import Sidebar from '../../components2/Sidebar';
-import './Loginmypage.css';
-import { getLocationAPI, getWeatherAPI } from '../../api/weather';
-import { FaMapMarkerAlt } from 'react-icons/fa';
+import React, { useEffect, useState } from "react";
+import Sidebar from "../../components2/Sidebar";
+import Popup from "../../components/Popup";
+import PopupContent from "../../components/PopupContent";
+import "./Loginmypage.css";
+import { getLocationAPI, getWeatherAPI } from "../../api/weather";
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 const Loginmypage = () => {
   const [locationData, setLocationData] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
   const [error, setError] = useState(null);
   const [clothingRecommendations, setClothingRecommendations] = useState(["추천1", "추천2", "추천3"]);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [selectedRecommendation, setSelectedRecommendation] = useState("");
 
   useEffect(() => {
     if (!locationData) {
@@ -48,12 +52,12 @@ const Loginmypage = () => {
               temperature: resData.Temperature.Metric.Value,
               weatherIcon: resData.WeatherIcon,
               weatherText: resData.WeatherText,
-              date: new Date().toLocaleDateString('ko-KR', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
+              date: new Date().toLocaleDateString("ko-KR", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
               }),
-              label: '오늘',
+              label: "오늘",
             });
           } else {
             setError("날씨 정보를 올바르게 가져올 수 없습니다.");
@@ -78,6 +82,21 @@ const Loginmypage = () => {
     );
   };
 
+  const handleRecommendationClick = (recommendation) => {
+    setSelectedRecommendation(recommendation);
+    setIsPopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
+    setSelectedRecommendation("");
+  };
+
+  const handleFeedbackSubmit = (feedbackData) => {
+    console.log("피드백 데이터:", feedbackData);
+    closePopup(); // 팝업 닫기
+  };
+
   return (
     <Sidebar>
       <div className="loginmypage-content">
@@ -90,17 +109,13 @@ const Loginmypage = () => {
                 <FaMapMarkerAlt />
                 <span className="location-text">{locationData?.localizedName}</span>
               </div>
-              <div className="current-date">
-                {weatherData.date}
-              </div>
+              <div className="current-date">{weatherData.date}</div>
               <div className="temperature-box">
                 <p>기온: {weatherData?.temperature}°C</p>
               </div>
               <div className="weather-condition-box">
                 <img
-                  src={`https://developer.accuweather.com/sites/default/files/${String(
-                    weatherData.weatherIcon
-                  ).padStart(2, "0")}-s.png`}
+                  src={`https://developer.accuweather.com/sites/default/files/${String(weatherData.weatherIcon).padStart(2, "0")}-s.png`}
                   alt="Weather Icon"
                   className="weather-icon"
                 />
@@ -116,13 +131,21 @@ const Loginmypage = () => {
           <div className="recommendation-header">
             <h3>Today's Clothing Recommendation</h3>
             <div className="button-group">
-              <button className="add-recommendation-button" onClick={addClothingRecommendation}>+</button>
-              <button className="remove-recommendation-button" onClick={removeClothingRecommendation}>-</button>
+              <button className="add-recommendation-button" onClick={addClothingRecommendation}>
+                +
+              </button>
+              <button className="remove-recommendation-button" onClick={removeClothingRecommendation}>
+                -
+              </button>
             </div>
           </div>
           <div className="clothing-boxes">
             {clothingRecommendations.map((recommendation, index) => (
-              <div className="clothing-box" key={index}>
+              <div
+                className="clothing-box"
+                key={index}
+                onClick={() => handleRecommendationClick(recommendation)}
+              >
                 <p>{recommendation}</p>
                 <div className="clothing-image">[추천 이미지]</div>
               </div>
@@ -134,6 +157,19 @@ const Loginmypage = () => {
           <h3>나의 일정</h3>
           <div className="calendar-placeholder">[구글 캘린더 일정]</div>
         </div>
+
+        {/* 팝업 */}
+        <Popup
+          isOpen={isPopupOpen}
+          onClose={closePopup}
+          content={
+            <PopupContent
+              recommendation={selectedRecommendation}
+              onSubmit={handleFeedbackSubmit}
+              onClose={closePopup}
+            />
+          }
+        />
       </div>
     </Sidebar>
   );

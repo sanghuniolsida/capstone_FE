@@ -1,0 +1,87 @@
+.popup-layout {
+    display: grid;
+    grid-template-areas:
+      "image info"
+      "image feedback"
+      "image feedback";
+    grid-template-columns: 1fr 1fr; /* 이미지와 나머지 영역의 비율을 동일하게 설정 */
+    grid-gap: 20px;
+    padding: 20px;
+  }
+  
+  .clothing-image-section {
+    grid-area: image;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    padding: 20px;
+  }
+  
+  .clothing-item {
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 10px;
+  }
+
+  .clothing-info-section {
+    grid-area: info;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ffffff;
+  }
+  
+  .clothing-info-section h4 {
+    margin-bottom: 10px;
+  }
+  
+  .clothing-info-section ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .clothing-info-section li {
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+  
+  .feedback-section {
+    grid-area: feedback;
+    text-align: left;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ffffff;
+  }
+  
+  .feedback-options {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .feedback-options label {
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .submit-button {
+    background-color: blue; 
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    justify-self: end;
+    grid-column: 2; 
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3; 
+    transform: scale(1.05); /* 살짝 커지는 효과 */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
