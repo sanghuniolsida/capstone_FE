@@ -52,6 +52,7 @@ const Country = () => {
     '브라질': ['리우데자네이루', '상파울루', '브라질리아', '사우바도르', '마나우스'],
     '아르헨티나': ['부에노스아이레스', '멘도사', '코르도바', '우수아이아', '로사리오'],
     '칠레': ['산티아고', '발파라이소', '푼타 아레나스', '발디비아', '칠로에 섬'],
+    '아이슬란드': ['레이캬비크', '아쿠레이리', '헤픈', '세이디스피외르뒤르', '이스라피외르뒤르'],
   };
 
   // 국가 선택 시 도시 목록 초기화
@@ -506,6 +507,21 @@ const Country = () => {
     } else if (country === '칠레' && selectedCity === '칠로에 섬') {
       latitude = -42.6186;
       longitude = -73.7736;
+    } else if (country === '아이슬란드' && selectedCity === '레이캬비크') {
+      latitude = 64.1355;
+      longitude = 21.8954;
+    } else if (country === '아이슬란드' && selectedCity === '아쿠레이리') {
+      latitude = 65.6885;
+      longitude = 18.1262;
+    } else if (country === '아이슬란드' && selectedCity === '헤픈') {
+      latitude = 64.258;
+      longitude = 15.2127;
+    } else if (country === '아이슬란드' && selectedCity === '세이디스피외르뒤르') {
+      latitude = 65.2603;
+      longitude = 14.0103;
+    } else if (country === '아이슬란드' && selectedCity === '이스라피외르뒤르') {
+      latitude = 66.0735;
+      longitude = 23.1198;
     }
     
     getLocationKeyAPI(latitude, longitude)

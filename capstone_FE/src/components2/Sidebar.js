@@ -1,5 +1,3 @@
-// src/components2/Sidebar.js
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaHome, FaUser, FaPlane, FaTshirt } from 'react-icons/fa';
@@ -10,16 +8,17 @@ const Sidebar = ({ children }) => {
   const navigate = useNavigate();
 
   const handleCountryClick = () => {
-    setIsFlying(true); // 애니메이션 시작
+    setIsFlying(true); 
   };
 
   useEffect(() => {
     if (isFlying) {
       const timer = setTimeout(() => {
-        navigate('/country'); // 애니메이션 후 페이지 이동
-      }, 1000); // 애니메이션 시간과 맞춤
+        setIsFlying(false); 
+        navigate('/country'); 
+      }, 1500); 
 
-      return () => clearTimeout(timer); // cleanup
+      return () => clearTimeout(timer); 
     }
   }, [isFlying, navigate]);
 
