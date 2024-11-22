@@ -1,0 +1,70 @@
+.mycloth-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    height: 100%;
+  }
+  
+  .clothing-section {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  
+  .clothing-section h3 {
+    text-align: left;
+    margin-bottom: 10px;
+  }
+  
+  .arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 24px;
+    color: #333;
+    cursor: pointer;
+    z-index: 10;
+  }
+  
+  .arrow.left {
+    left: -5px;
+  }
+  
+  .arrow.right {
+    right: -5px;
+  }
+  
+  /* 옷 사진 박스 */
+  .clothing-box {
+    display: flex;
+    overflow-x: scroll;
+    scroll-behavior: smooth;
+    gap: 10px;
+    padding: 10px;
+  }
+  
+  .clothing-box::-webkit-scrollbar {
+    display: none; /* 스크롤바 숨김 */
+  }
+  
+  .clothing-item {
+    flex: 0 0 150px; 
+    height: 200px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  
+  .clothing-item img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  
