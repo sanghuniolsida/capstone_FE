@@ -14,6 +14,7 @@ const Loginmypage = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedRecommendation, setSelectedRecommendation] = useState("");
 
+  
   useEffect(() => {
     if (!locationData) {
       navigator.geolocation.getCurrentPosition(
