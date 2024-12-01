@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import Sidebar from "../../components2/Sidebar";
+import ClothEditPopup from "../../components/ClothEditPopup"; 
 import "./Mycloth.css";
 
 const Mycloth = () => {
-  const [clothesData, setClothesData] = useState([]); // 전체 옷 데이터
+  const [clothesData, setClothesData] = useState([]); 
   const [errorMessage, setErrorMessage] = useState(null);
+  const [selectedCloth, setSelectedCloth] = useState(null); 
 
   const topRef = useRef(null);
   const bottomRef = useRef(null);
@@ -19,8 +21,7 @@ const Mycloth = () => {
         const response = await axios.get(
           `https://moipzy.shop/moipzy/clothes/${userId}`
         );
-        console.log("옷 데이터:", response.data);
-        setClothesData(response.data); 
+        setClothesData(response.data);
       } catch (err) {
         console.error("오류 발생:", err);
         setErrorMessage("옷 데이터를 불러오는 중 오류가 발생했습니다.");
@@ -43,6 +44,36 @@ const Mycloth = () => {
     ref.current.scrollBy({ left: 300, behavior: "smooth" });
   };
 
+  const handleClothClick = (item) => {
+    setSelectedCloth(item);
+  };
+
+  const handleUpdate = async (id, updatedData) => {
+    try {
+      await axios.patch(`https://moipzy.shop/moipzy/clothes/${id}`, updatedData);
+      alert("수정 성공!");
+      setSelectedCloth(null);
+      setClothesData((prevData) =>
+        prevData.map((item) => (item.id === id ? { ...item, ...updatedData } : item))
+      );
+    } catch (err) {
+      console.error("수정 실패:", err);
+      alert("수정 실패!");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`https://moipzy.shop/moipzy/clothes/${id}`);
+      alert("삭제 성공!");
+      setSelectedCloth(null); 
+      setClothesData((prevData) => prevData.filter((item) => item.id !== id));
+    } catch (err) {
+      console.error("삭제 실패:", err);
+      alert("삭제 실패!");
+    }
+  };
+
   return (
     <Sidebar>
       <div className="mycloth-container">
@@ -58,15 +89,16 @@ const Mycloth = () => {
             {clothesData
               .filter((item) => item.largeCategory === "TOP")
               .map((item, index) => (
-                <div className="clothing-item" key={index}>
+                <div
+                  className="clothing-item"
+                  key={index}
+                  onClick={() => handleClothClick(item)} 
+                >
                   <img
-                    src={getFullImageUrl(item.imgUrl)} 
+                    src={getFullImageUrl(item.imgUrl)}
                     alt={`상의 ${index + 1}`}
                     onError={(e) => {
-                      e.target.src = "/images/placeholder.png"; 
-                      console.error(
-                        `이미지 로드 실패: ${getFullImageUrl(item.imgUrl)}`
-                      );
+                      e.target.src = "/images/placeholder.png";
                     }}
                   />
                 </div>
@@ -87,15 +119,16 @@ const Mycloth = () => {
             {clothesData
               .filter((item) => item.largeCategory === "BOTTOM")
               .map((item, index) => (
-                <div className="clothing-item" key={index}>
+                <div
+                  className="clothing-item"
+                  key={index}
+                  onClick={() => handleClothClick(item)} 
+                >
                   <img
-                    src={getFullImageUrl(item.imgUrl)} 
+                    src={getFullImageUrl(item.imgUrl)}
                     alt={`하의 ${index + 1}`}
                     onError={(e) => {
-                      e.target.src = "/images/placeholder.png"; 
-                      console.error(
-                        `이미지 로드 실패: ${getFullImageUrl(item.imgUrl)}`
-                      );
+                      e.target.src = "/images/placeholder.png";
                     }}
                   />
                 </div>
@@ -116,15 +149,16 @@ const Mycloth = () => {
             {clothesData
               .filter((item) => item.largeCategory === "OUTER")
               .map((item, index) => (
-                <div className="clothing-item" key={index}>
+                <div
+                  className="clothing-item"
+                  key={index}
+                  onClick={() => handleClothClick(item)}
+                >
                   <img
-                    src={getFullImageUrl(item.imgUrl)} 
+                    src={getFullImageUrl(item.imgUrl)}
                     alt={`아우터 ${index + 1}`}
                     onError={(e) => {
-                      e.target.src = "/images/placeholder.png"; 
-                      console.error(
-                        `이미지 로드 실패: ${getFullImageUrl(item.imgUrl)}`
-                      );
+                      e.target.src = "/images/placeholder.png";
                     }}
                   />
                 </div>
@@ -134,6 +168,15 @@ const Mycloth = () => {
             ▶
           </div>
         </div>
+
+        {selectedCloth && (
+          <ClothEditPopup
+            item={selectedCloth}
+            onClose={() => setSelectedCloth(null)}
+            onUpdate={handleUpdate}
+            onDelete={handleDelete}
+          />
+        )}
       </div>
     </Sidebar>
   );
