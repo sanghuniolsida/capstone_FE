@@ -1,56 +1,130 @@
 import React, { useState } from "react";
 import Sidebar from "../../components2/Sidebar";
+import axios from "axios";
 import "./Clothregister.css";
 
 const Clothregister = () => {
   const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState(""); 
-  const [mainCategory, setMainCategory] = useState("");
-  const [subCategory, setSubCategory] = useState("");
+  const [preview, setPreview] = useState("");
+  const [largeCategory, setLargeCategory] = useState("");
+  const [smallCategory, setSmallCategory] = useState("");
   const [color, setColor] = useState("");
-  const [thickness, setThickness] = useState("");
+  const [degree, setDegree] = useState("");
   const [link, setLink] = useState("");
 
-  const subCategoryOptions = {
-    상의: ["반팔", "롱슬리브", "후드티", "맨투맨", "니트"],
-    하의: ["청바지", "반바지", "슬랙스", "츄리닝"],
-    아우터: ["재킷", "패딩", "코트", "가디건"],
+  const smallCategoryOptions = {
+    OUTER: [
+      "CARDIGAN",
+      "DENIM_JACKET",
+      "BLOUSON",
+      "BLAZER",
+      "HOODED",
+      "MA1",
+      "STADIUM_JACKET",
+      "LEATHER_JACKET",
+      "JACKET",
+      "COAT",
+      "PADDING",
+    ],
+    TOP: [
+      "T_SHIRT",
+      "POLO_SHIRT",
+      "LONG_SLEEVE",
+      "D_SHIRT",
+      "HOODIE",
+      "SWEAT_SHIRT",
+      "KNIT",
+    ],
+    BOTTOM: [
+      "JEANS",
+      "SWEAT_PANTS",
+      "COTTON_PANTS",
+      "SLACKS",
+      "LINEN_PANTS",
+      "SHORTS",
+    ],
   };
+
+  const colorOptions = [
+    "CHARCOAL",
+    "LIGHTGREY",
+    "BLUE",
+    "NAVY",
+    "GREEN",
+    "BLACK",
+    "WHITE",
+    "BEIGE",
+    "RED",
+    "BROWN",
+    "OLIVE",
+    "LIGHTBLUE",
+    "DEEPBLUE",
+    "KHAKI",
+    "CREAM",
+  ];
+
+  const degreeOptions = ["THIN", "LTHIN", "NORMAL", "LTHICK", "THICK"];
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
 
-    // 이미지 미리보기 URL 
     if (selectedFile) {
       const objectUrl = URL.createObjectURL(selectedFile);
       setPreview(objectUrl);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({
-      file,
-      mainCategory,
-      subCategory,
+
+    if (!file || !largeCategory || !smallCategory || !color || !degree) {
+      alert("모든 필드를 입력하세요!");
+      return;
+    }
+
+    const formData = new FormData();
+    const clothData = {
+      userId: 2, // 실제 사용자 ID로 변경
+      largeCategory,
+      smallCategory,
       color,
-      thickness,
-      link,
-    });
-    alert("등록 성공!");
+      degree,
+    };
+
+    formData.append(
+      "clothData",
+      new Blob([JSON.stringify(clothData)], { type: "application/json" })
+    );
+    formData.append("clothImg", file);
+
+    try {
+      const response = await axios.post(
+        "https://moipzy.shop/moipzy/clothes",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      alert("옷 등록 성공!");
+      console.log("등록 성공:", response.data);
+    } catch (error) {
+      console.error("등록 실패:", error.response?.data || error.message);
+      alert("옷 등록 실패! 다시 시도하세요.");
+    }
   };
 
   return (
     <Sidebar>
       <div className="clothregister-container">
         <div className="left-panel">
-          {/* 등록한 파일 미리보기 */}
           <div className="image-preview">
             {preview ? (
               <img src={preview} alt="옷 미리보기" className="preview-image" />
             ) : (
-              <p>select image</p>
+              <p>이미지를 선택하세요</p>
             )}
           </div>
 
@@ -71,33 +145,33 @@ const Clothregister = () => {
         </div>
 
         <div className="right-panel">
-          <div className="right-panel-top">
+          <div className="grid-container">
             <div className="form-group">
               <label>대분류</label>
               <select
-                value={mainCategory}
+                value={largeCategory}
                 onChange={(e) => {
-                  setMainCategory(e.target.value);
-                  setSubCategory("");
+                  setLargeCategory(e.target.value);
+                  setSmallCategory(""); // 대분류 변경 시 소분류 초기화
                 }}
               >
                 <option value="">선택</option>
-                <option value="상의">상의</option>
-                <option value="하의">하의</option>
-                <option value="아우터">아우터</option>
+                <option value="OUTER">아우터</option>
+                <option value="TOP">상의</option>
+                <option value="BOTTOM">하의</option>
               </select>
             </div>
 
             <div className="form-group">
               <label>소분류</label>
               <select
-                value={subCategory}
-                onChange={(e) => setSubCategory(e.target.value)}
-                disabled={!mainCategory} 
+                value={smallCategory}
+                onChange={(e) => setSmallCategory(e.target.value)}
+                disabled={!largeCategory}
               >
                 <option value="">선택</option>
-                {mainCategory &&
-                  subCategoryOptions[mainCategory].map((item) => (
+                {largeCategory &&
+                  smallCategoryOptions[largeCategory].map((item) => (
                     <option key={item} value={item}>
                       {item}
                     </option>
@@ -107,42 +181,32 @@ const Clothregister = () => {
 
             <div className="form-group">
               <label>색상</label>
-              <select
-                value={color}
-                onChange={(e) => setColor(e.target.value)}
-              >
+              <select value={color} onChange={(e) => setColor(e.target.value)}>
                 <option value="">선택</option>
-                <option value="검정">검정</option>
-                <option value="흰색">흰색</option>
-                <option value="파랑">파랑</option>
-                <option value="빨강">빨강</option>
-                <option value="초록">초록</option>
+                {colorOptions.map((color) => (
+                  <option key={color} value={color}>
+                    {color}
+                  </option>
+                ))}
               </select>
             </div>
 
             <div className="form-group">
               <label>두께</label>
-              <select
-                value={thickness}
-                onChange={(e) => setThickness(e.target.value)}
-              >
+              <select value={degree} onChange={(e) => setDegree(e.target.value)}>
                 <option value="">선택</option>
-                <option value="얇음">얇음</option>
-                <option value="보통">보통</option>
-                <option value="두꺼움">두꺼움</option>
+                {degreeOptions.map((degree) => (
+                  <option key={degree} value={degree}>
+                    {degree}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
 
-          <div className="right-panel-bottom">
-            <button
-              type="submit"
-              className="submit-button"
-              onClick={handleSubmit}
-            >
-              등록
-            </button>
-          </div>
+          <button className="submit-button" onClick={handleSubmit}>
+            등록
+          </button>
         </div>
       </div>
     </Sidebar>

@@ -1,17 +1,16 @@
 // src/pages/Login/index.js
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // useNavigate 가져오기
+import { useNavigate } from 'react-router-dom'; 
 import Header from '../../components/Header';
 import { FcGoogle } from 'react-icons/fc';
 import './Login.css';
 
 const Login = () => {
-  const navigate = useNavigate(); // useNavigate 훅 설정
+  const navigate = useNavigate(); 
 
   const handleLogin = (event) => {
     event.preventDefault(); // 기본 폼 동작 막기
-    // 로그인 로직을 여기에 추가합니다. 성공 시 다음 페이지로 이동
     navigate('/loginmypage'); // 로그인 성공 시 Loginmypage로 이동
   };
 
