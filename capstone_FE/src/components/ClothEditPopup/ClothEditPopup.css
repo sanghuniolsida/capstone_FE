@@ -1,0 +1,89 @@
+.cloth-edit-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.cloth-edit-popup {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 500px;
+    height: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+}
+
+.popup-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.popup-header h3 {
+    margin: 0;
+}
+
+.popup-header .close-button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.popup-content .image-preview {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.popup-content img {
+    max-width: 100%;
+    border-radius: 10px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    grid-gap: 10px; 
+    width: 100%;
+    margin-top: 170px;
+}
+
+.popup-actions {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.delete-button,
+.update-button {
+    padding: 10px 15px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 48%; 
+}
+
+.delete-button {
+    background: #e74c3c;
+    color: white;
+}
+
+.update-button {
+    background: #3498db;
+    color: white;
+}
