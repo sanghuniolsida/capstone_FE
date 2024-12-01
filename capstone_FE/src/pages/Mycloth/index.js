@@ -11,7 +11,7 @@ const Mycloth = () => {
   const bottomRef = useRef(null);
   const outerRef = useRef(null);
 
-  // 옷 데이터를 가져오는 함수
+  // 옷 데이터를 가져오기
   useEffect(() => {
     const fetchClothes = async () => {
       try {
@@ -20,7 +20,7 @@ const Mycloth = () => {
           `https://moipzy.shop/moipzy/clothes/${userId}`
         );
         console.log("옷 데이터:", response.data);
-        setClothesData(response.data); // 옷 데이터 설정
+        setClothesData(response.data); 
       } catch (err) {
         console.error("오류 발생:", err);
         setErrorMessage("옷 데이터를 불러오는 중 오류가 발생했습니다.");
@@ -30,13 +30,11 @@ const Mycloth = () => {
     fetchClothes();
   }, []);
 
-  // 이미지 경로를 전체 URL로 변환
   const getFullImageUrl = (url) => {
     if (!url) return "";
     return `https://moipzy.shop${url}`;
   };
 
-  // 슬라이드 기능
   const scrollLeft = (ref) => {
     ref.current.scrollBy({ left: -300, behavior: "smooth" });
   };
@@ -62,10 +60,10 @@ const Mycloth = () => {
               .map((item, index) => (
                 <div className="clothing-item" key={index}>
                   <img
-                    src={getFullImageUrl(item.imgUrl)} // imgUrl을 사용
+                    src={getFullImageUrl(item.imgUrl)} 
                     alt={`상의 ${index + 1}`}
                     onError={(e) => {
-                      e.target.src = "/images/placeholder.png"; // 기본 이미지로 대체
+                      e.target.src = "/images/placeholder.png"; 
                       console.error(
                         `이미지 로드 실패: ${getFullImageUrl(item.imgUrl)}`
                       );
@@ -91,10 +89,10 @@ const Mycloth = () => {
               .map((item, index) => (
                 <div className="clothing-item" key={index}>
                   <img
-                    src={getFullImageUrl(item.imgUrl)} // imgUrl을 사용
+                    src={getFullImageUrl(item.imgUrl)} 
                     alt={`하의 ${index + 1}`}
                     onError={(e) => {
-                      e.target.src = "/images/placeholder.png"; // 기본 이미지로 대체
+                      e.target.src = "/images/placeholder.png"; 
                       console.error(
                         `이미지 로드 실패: ${getFullImageUrl(item.imgUrl)}`
                       );
@@ -120,10 +118,10 @@ const Mycloth = () => {
               .map((item, index) => (
                 <div className="clothing-item" key={index}>
                   <img
-                    src={getFullImageUrl(item.imgUrl)} // imgUrl을 사용
+                    src={getFullImageUrl(item.imgUrl)} 
                     alt={`아우터 ${index + 1}`}
                     onError={(e) => {
-                      e.target.src = "/images/placeholder.png"; // 기본 이미지로 대체
+                      e.target.src = "/images/placeholder.png"; 
                       console.error(
                         `이미지 로드 실패: ${getFullImageUrl(item.imgUrl)}`
                       );
