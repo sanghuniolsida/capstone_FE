@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Header from "../../components/Header"; 
+import "./Signup.css";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -55,20 +56,18 @@ const Signup = () => {
               id="email"
               placeholder="Enter your email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)} 
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
-
             <label htmlFor="username">Username</label>
             <input
               type="text"
               id="username"
               placeholder="Enter your username"
               value={username}
-              onChange={(e) => setUsername(e.target.value)} 
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
-
             <label htmlFor="password">Password</label>
             <input
               type="password"
@@ -78,7 +77,6 @@ const Signup = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-
             <button type="submit" className="signup-button">Register</button>
           </form>
 
