@@ -13,11 +13,11 @@ const Mycloth = () => {
   const bottomRef = useRef(null);
   const outerRef = useRef(null);
 
-  // 옷 데이터를 가져오기
+  // 옷 데이터 가져오기
   useEffect(() => {
     const fetchClothes = async () => {
       try {
-        const userId = 2; // 실제 userId
+        const userId = 2; // 실제 userId-> 여기서 하드코딩 됐으므로 동적으로 바꾸면 됨.
         const response = await axios.get(
           `https://moipzy.shop/moipzy/clothes/${userId}`
         );
@@ -63,14 +63,22 @@ const Mycloth = () => {
   };
 
   const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("정말 이 옷을 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+
     try {
-      await axios.delete(`https://moipzy.shop/moipzy/clothes/${id}`);
-      alert("삭제 성공!");
-      setSelectedCloth(null); 
-      setClothesData((prevData) => prevData.filter((item) => item.id !== id));
+      const response = await axios.delete(`https://moipzy.shop/moipzy/clothes/${id}`);
+      if (response.status === 200 || response.status === 204) {
+        alert("삭제 성공!");
+        setSelectedCloth(null); 
+        setClothesData((prevData) => prevData.filter((item) => item.id !== id));
+      } else {
+        console.error("삭제 실패: 예상치 못한 응답 상태 코드", response.status);
+        alert("삭제 요청이 서버에서 실패했습니다. 다시 시도하세요.");
+      }
     } catch (err) {
       console.error("삭제 실패:", err);
-      alert("삭제 실패!");
+      alert("삭제 요청 중 오류가 발생했습니다. 인터넷 연결을 확인하세요.");
     }
   };
 
