@@ -83,9 +83,16 @@ const Clothregister = () => {
       return;
     }
 
+    // localStorage에서 userId 가져오기
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
     const formData = new FormData();
     const clothData = {
-      userId: 2, // 실제 사용자 ID로 변경
+      userId: parseInt(userId, 10), // userId를 동적으로 가져오기
       largeCategory,
       smallCategory,
       color,

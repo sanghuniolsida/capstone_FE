@@ -1,3 +1,5 @@
+// src/components/Sidebar.js
+
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaHome, FaUser, FaPlane, FaTshirt } from 'react-icons/fa';
@@ -5,7 +7,24 @@ import './Sidebar.css';
 
 const Sidebar = ({ children }) => {
   const [isFlying, setIsFlying] = useState(false);
+  const [username, setUsername] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // localStorage에서 username 확인
+    const storedUsername = localStorage.getItem('username');
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    // 로그아웃 처리
+    localStorage.removeItem('username');
+    alert('로그아웃 되었습니다.');
+    setUsername(null);
+    navigate('/'); // 홈 화면으로 이동
+  };
 
   const handleCountryClick = () => {
     setIsFlying(true); 
@@ -24,10 +43,27 @@ const Sidebar = ({ children }) => {
 
   return (
     <div className="header-layout">
+      {/* 상단 헤더 */}
       <header className="header-top">
         <h1 className="title">MOIPZY</h1>
+        <div className="auth-buttons">
+          {username ? (
+            <div className="logged-in">
+              <span>{username}님 반갑습니다!</span>
+              <button onClick={handleLogout} className="logout-button">
+                로그아웃
+              </button>
+            </div>
+          ) : (
+            <>
+              <Link to="/login" className="header-button">Sign In</Link>
+              <Link to="/signup" className="header-button">Sign Up</Link>
+            </>
+          )}
+        </div>
       </header>
 
+      {/* 사이드바 */}
       <aside className="sidebar">
         <Link to="/" className="sidebar-item">
           <FaHome className="sidebar-icon" /> 홈
@@ -47,6 +83,7 @@ const Sidebar = ({ children }) => {
         </div>
       </aside>
 
+      {/* 메인 컨텐츠 */}
       <main className="main-content">
         {children ? children : (
           <div>
