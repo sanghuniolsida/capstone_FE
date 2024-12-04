@@ -5,16 +5,62 @@ import PopupContent from "../../components/PopupContent";
 import "./Loginmypage.css";
 import { getLocationAPI, getWeatherAPI } from "../../api/weather";
 import { FaMapMarkerAlt } from "react-icons/fa";
+import { useNavigate, useLocation } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const Loginmypage = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [locationData, setLocationData] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
   const [error, setError] = useState(null);
-  const [clothingRecommendations, setClothingRecommendations] = useState(["추천1", "추천2", "추천3"]);
+  const [clothingRecommendations] = useState([
+    "추천1",
+    "추천2",
+    "추천3",
+  ]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedRecommendation, setSelectedRecommendation] = useState("");
+  const [username, setUsername] = useState("");
 
-  
+  // 토큰 및 사용자 정보 처리
+  useEffect(() => {
+    const processTokenAndUsername = () => {
+      const params = new URLSearchParams(location.search);
+      const token = params.get("token");
+      const usernameParam = params.get("username");
+
+      if (token) {
+        // JWT 토큰 저장
+        localStorage.setItem("jwtToken", token);
+
+        try {
+          const decodedToken = jwtDecode(token); // 토큰 디코드
+          const extractedUsername = usernameParam || decodedToken.username || "사용자";
+          localStorage.setItem("username", extractedUsername);
+          setUsername(extractedUsername);
+        } catch (error) {
+          console.error("JWT 디코딩 오류:", error);
+          alert("로그인 정보를 처리하는 데 문제가 발생했습니다.");
+        }
+
+        // URL 정리
+        if (location.search.includes("token")) {
+          navigate("/loginmypage", { replace: true });
+        }
+      } else if (!localStorage.getItem("jwtToken")) {
+        alert("로그인 정보가 없습니다. 다시 로그인해주세요.");
+        navigate("/login");
+      } else {
+        const storedUsername = localStorage.getItem("username");
+        setUsername(storedUsername || "사용자");
+      }
+    };
+
+    processTokenAndUsername();
+  }, [location, navigate]);
+
+  // 위치 정보 가져오기
   useEffect(() => {
     if (!locationData) {
       navigator.geolocation.getCurrentPosition(
@@ -41,8 +87,9 @@ const Loginmypage = () => {
         }
       );
     }
-  }, []);
+  }, [locationData]);
 
+  // 날씨 정보 가져오기
   useEffect(() => {
     if (locationData) {
       getWeatherAPI(locationData.key)
@@ -70,19 +117,6 @@ const Loginmypage = () => {
     }
   }, [locationData]);
 
-  const addClothingRecommendation = () => {
-    setClothingRecommendations((prevRecommendations) => [
-      ...prevRecommendations,
-      `추천${prevRecommendations.length + 1}`,
-    ]);
-  };
-
-  const removeClothingRecommendation = () => {
-    setClothingRecommendations((prevRecommendations) =>
-      prevRecommendations.length > 0 ? prevRecommendations.slice(0, -1) : prevRecommendations
-    );
-  };
-
   const handleRecommendationClick = (recommendation) => {
     setSelectedRecommendation(recommendation);
     setIsPopupOpen(true);
@@ -95,7 +129,7 @@ const Loginmypage = () => {
 
   const handleFeedbackSubmit = (feedbackData) => {
     console.log("피드백 데이터:", feedbackData);
-    closePopup(); // 팝업 닫기
+    closePopup(); 
   };
 
   return (
@@ -116,7 +150,9 @@ const Loginmypage = () => {
               </div>
               <div className="weather-condition-box">
                 <img
-                  src={`https://developer.accuweather.com/sites/default/files/${String(weatherData.weatherIcon).padStart(2, "0")}-s.png`}
+                  src={`https://developer.accuweather.com/sites/default/files/${String(
+                    weatherData.weatherIcon
+                  ).padStart(2, "0")}-s.png`}
                   alt="Weather Icon"
                   className="weather-icon"
                 />
@@ -131,14 +167,6 @@ const Loginmypage = () => {
         <div className="clothing-recommendation-section">
           <div className="recommendation-header">
             <h3>Today's Clothing Recommendation</h3>
-            <div className="button-group">
-              <button className="add-recommendation-button" onClick={addClothingRecommendation}>
-                +
-              </button>
-              <button className="remove-recommendation-button" onClick={removeClothingRecommendation}>
-                -
-              </button>
-            </div>
           </div>
           <div className="clothing-boxes">
             {clothingRecommendations.map((recommendation, index) => (
@@ -154,12 +182,6 @@ const Loginmypage = () => {
           </div>
         </div>
 
-        <div className="calendar-section">
-          <h3>나의 일정</h3>
-          <div className="calendar-placeholder">[구글 캘린더 일정]</div>
-        </div>
-
-        {/* 팝업 */}
         <Popup
           isOpen={isPopupOpen}
           onClose={closePopup}

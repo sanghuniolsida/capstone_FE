@@ -27,8 +27,8 @@ const Clothregister = () => {
       "PADDING",
     ],
     TOP: [
-      "T_SHIRT",
-      "POLO_SHIRT",
+      "T_SHIRT", // 반팔
+      "POLO_SHIRT", // 폴로셔츠
       "LONG_SLEEVE",
       "D_SHIRT",
       "HOODIE",
@@ -40,7 +40,7 @@ const Clothregister = () => {
       "SWEAT_PANTS",
       "COTTON_PANTS",
       "SLACKS",
-      "LINEN_PANTS",
+      "LINEN_PANTS", // 얇은 바지
       "SHORTS",
     ],
   };
@@ -63,7 +63,25 @@ const Clothregister = () => {
     "CREAM",
   ];
 
-  const degreeOptions = ["THIN", "LTHIN", "NORMAL", "LTHICK", "THICK"];
+  // 두께 선택 옵션 동적 설정
+  const getDegreeOptions = () => {
+    if (largeCategory === "TOP") {
+      if (smallCategory === "T_SHIRT" || smallCategory === "POLO_SHIRT") {
+        return ["NORMAL"]; // 반팔, 폴로셔츠는 NORMAL만
+      } else {
+        return ["THIN", "NORMAL", "THICK"]; // 나머지 상의
+      }
+    } else if (largeCategory === "BOTTOM") {
+      if (smallCategory === "LINEN_PANTS") {
+        return ["THIN"]; // 얇은 바지는 THIN만
+      } else {
+        return ["THIN", "LTHIN", "NORMAL", "LTHICK", "THICK"]; // 나머지 하의
+      }
+    } else if (largeCategory === "OUTER") {
+      return ["THIN", "NORMAL", "THICK"]; // 아우터는 3가지
+    }
+    return []; // 기본값
+  };
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -83,9 +101,15 @@ const Clothregister = () => {
       return;
     }
 
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
     const formData = new FormData();
     const clothData = {
-      userId: 2, // 실제 사용자 ID로 변경
+      userId: parseInt(userId, 10),
       largeCategory,
       smallCategory,
       color,
@@ -153,6 +177,7 @@ const Clothregister = () => {
                 onChange={(e) => {
                   setLargeCategory(e.target.value);
                   setSmallCategory(""); // 대분류 변경 시 소분류 초기화
+                  setDegree(""); // 두께 초기화
                 }}
               >
                 <option value="">선택</option>
@@ -166,7 +191,10 @@ const Clothregister = () => {
               <label>소분류</label>
               <select
                 value={smallCategory}
-                onChange={(e) => setSmallCategory(e.target.value)}
+                onChange={(e) => {
+                  setSmallCategory(e.target.value);
+                  setDegree(""); // 소분류 변경 시 두께 초기화
+                }}
                 disabled={!largeCategory}
               >
                 <option value="">선택</option>
@@ -193,9 +221,13 @@ const Clothregister = () => {
 
             <div className="form-group">
               <label>두께</label>
-              <select value={degree} onChange={(e) => setDegree(e.target.value)}>
+              <select
+                value={degree}
+                onChange={(e) => setDegree(e.target.value)}
+                disabled={getDegreeOptions().length === 0}
+              >
                 <option value="">선택</option>
-                {degreeOptions.map((degree) => (
+                {getDegreeOptions().map((degree) => (
                   <option key={degree} value={degree}>
                     {degree}
                   </option>

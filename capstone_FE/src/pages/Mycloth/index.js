@@ -17,10 +17,11 @@ const Mycloth = () => {
   useEffect(() => {
     const fetchClothes = async () => {
       try {
-        const userId = 2; // 실제 userId-> 여기서 하드코딩 됐으므로 동적으로 바꾸면 됨.
-        const response = await axios.get(
-          `https://moipzy.shop/moipzy/clothes/${userId}`
-        );
+        const userId = localStorage.getItem('userId'); // localStorage에서 userId 가져오기
+        if (!userId) {
+          throw new Error('로그인되지 않았습니다.');
+        }
+        const response = await axios.get(`https://moipzy.shop/moipzy/clothes/${userId}`);
         setClothesData(response.data);
       } catch (err) {
         console.error("오류 발생:", err);

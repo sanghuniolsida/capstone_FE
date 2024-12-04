@@ -1,7 +1,5 @@
-// src/pages/Home/index.js
-
 import React, { useEffect, useState } from 'react';
-import Header from '../../components/Header';
+import Sidebar from '../../components2/Sidebar';
 import { getLocationAPI, getWeatherAPI, getHistoricalWeatherAPI, getTomorrowWeatherAPI } from '../../api/weather';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import './Home.css';
@@ -30,19 +28,19 @@ const Home = () => {
                   localizedName: resData.LocalizedName,
                 });
               } else {
-                setError("위치 정보를 올바르게 가져올 수 없습니다.");
+                setError('위치 정보를 올바르게 가져올 수 없습니다.');
               }
             })
             .catch(() => {
-              setError("위치 정보를 가져올 수 없습니다.");
+              setError('위치 정보를 가져올 수 없습니다.');
             });
         },
         () => {
-          setError("현재 위치를 찾을 수 없습니다.");
+          setError('현재 위치를 찾을 수 없습니다.');
         }
       );
     }
-  }, []);
+  }, [locationData]);
 
   // 현재 날씨 데이터 가져오기
   useEffect(() => {
@@ -63,16 +61,15 @@ const Home = () => {
               label: '오늘',
             });
           } else {
-            setError("날씨 정보를 올바르게 가져올 수 없습니다.");
+            setError('날씨 정보를 올바르게 가져올 수 없습니다.');
           }
         })
         .catch(() => {
-          setError("날씨 정보를 가져오는 중 오류가 발생했습니다.");
+          setError('날씨 정보를 가져오는 중 오류가 발생했습니다.');
         });
     }
   }, [locationData]);
 
-  // 과거 날씨 데이터 가져오기
   useEffect(() => {
     if (locationData) {
       getHistoricalWeatherAPI(locationData.key)
@@ -95,16 +92,15 @@ const Home = () => {
               label: '어제',
             });
           } else {
-            setError("과거 날씨 정보를 올바르게 가져올 수 없습니다.");
+            setError('과거 날씨 정보를 올바르게 가져올 수 없습니다.');
           }
         })
         .catch(() => {
-          setError("과거 날씨 정보를 가져오는 중 오류가 발생했습니다.");
+          setError('과거 날씨 정보를 가져오는 중 오류가 발생했습니다.');
         });
     }
   }, [locationData]);
 
-  // 내일 날씨 데이터 가져오기
   useEffect(() => {
     if (locationData) {
       getTomorrowWeatherAPI(locationData.key)
@@ -129,11 +125,11 @@ const Home = () => {
               label: '내일',
             });
           } else {
-            setError("내일 날씨 정보를 올바르게 가져올 수 없습니다.");
+            setError('내일 날씨 정보를 올바르게 가져올 수 없습니다.');
           }
         })
         .catch(() => {
-          setError("내일 날씨 정보를 가져오는 중 오류가 발생했습니다.");
+          setError('내일 날씨 정보를 가져오는 중 오류가 발생했습니다.');
         });
     }
   }, [locationData]);
@@ -142,7 +138,7 @@ const Home = () => {
     setSelectedWeather(type);
   };
 
-  const displayedWeather = 
+  const displayedWeather =
     selectedWeather === 'yesterday'
       ? historicalWeatherData
       : selectedWeather === 'tomorrow'
@@ -150,21 +146,18 @@ const Home = () => {
       : weatherData;
 
   return (
-    <Header>
+    <Sidebar>
       <div className="home-content">
         {error ? (
           <p>{error}</p>
         ) : displayedWeather ? (
           <div>
             <div className="weather-box">
-              {/* 위치와 날씨 정보 표시 */}
               <div className="location-box">
                 <FaMapMarkerAlt />
                 <span className="location-text">{locationData?.localizedName}</span>
               </div>
-              <div className="current-date">
-                {displayedWeather.date}
-              </div>
+              <div className="current-date">{displayedWeather.date}</div>
               <div className="temperature-box">
                 <div className="current-temp">
                   <p>기온: {displayedWeather?.temperature}°C</p>
@@ -175,7 +168,7 @@ const Home = () => {
                 <img
                   src={`https://developer.accuweather.com/sites/default/files/${String(
                     displayedWeather.weatherIcon
-                  ).padStart(2, "0")}-s.png`}
+                  ).padStart(2, '0')}-s.png`}
                   alt="Weather Icon"
                   className="weather-icon"
                 />
@@ -201,7 +194,7 @@ const Home = () => {
           <p>로딩 중...</p>
         )}
       </div>
-    </Header>
+    </Sidebar>
   );
 };
 
