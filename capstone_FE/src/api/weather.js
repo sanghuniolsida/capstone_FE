@@ -7,7 +7,7 @@ const apiKey = process.env.REACT_APP_ACCUWEATHER_KEY;
 export const getLocationAPI = async (lat, lng) => {
   try {
     const response = await axios.get(
-      `http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${apiKey}&q=${lat}%2C${lng}&language=ko-kr`
+      `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${apiKey}&q=${lat}%2C${lng}&language=ko-kr`
     );
     return response.data;
   } catch (error) {
@@ -20,7 +20,7 @@ export const getLocationAPI = async (lat, lng) => {
 export const getWeatherAPI = async (locationKey) => {
     try {
       const response = await axios.get(
-        `http://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${apiKey}&language=ko-kr`
+        `https://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${apiKey}&language=ko-kr`
       );
       return response;
     } catch (error) {
@@ -32,7 +32,7 @@ export const getWeatherAPI = async (locationKey) => {
   export const getHistoricalWeatherAPI = async (locationKey) => {
     try {
       const response = await axios.get(
-        `http://dataservice.accuweather.com/currentconditions/v1/${locationKey}/historical/24?apikey=${apiKey}&language=ko-kr`
+        `https://dataservice.accuweather.com/currentconditions/v1/${locationKey}/historical/24?apikey=${apiKey}&language=ko-kr`
       );
       return response;
     } catch (error) {
@@ -45,7 +45,7 @@ export const getWeatherAPI = async (locationKey) => {
     export const getTodaywWeatherAPI = async (locationKey) => {
       try {
         const response = await axios.get(
-          `http://dataservice.accuweather.com/forecasts/v1/daily/1day/${locationKey}?apikey=${apiKey}&language=ko-kr`
+          `https://dataservice.accuweather.com/forecasts/v1/daily/1day/${locationKey}?apikey=${apiKey}&language=ko-kr`
         );
         return response.data;
       } catch (error) {
@@ -58,7 +58,7 @@ export const getWeatherAPI = async (locationKey) => {
   export const getTomorrowWeatherAPI = async (locationKey) => {
   try {
     const response = await axios.get(
-      `http://dataservice.accuweather.com/forecasts/v1/daily/5day/${locationKey}?apikey=${apiKey}&language=ko-kr`
+      `https://dataservice.accuweather.com/forecasts/v1/daily/5day/${locationKey}?apikey=${apiKey}&language=ko-kr`
     );
     return response.data;
   } catch (error) {
@@ -71,7 +71,7 @@ export const getWeatherAPI = async (locationKey) => {
 export const getLocationKeyAPI = async (latitude, longitude) => {
   try {
     const response = await axios.get(
-      `http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${apiKey}&q=${latitude},${longitude}&language=ko-kr`
+      `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${apiKey}&q=${latitude},${longitude}&language=ko-kr`
     );
     return response.data.Key; // LocationKey 반환
   } catch (error) {
@@ -84,7 +84,7 @@ export const getLocationKeyAPI = async (latitude, longitude) => {
 export const get5DayWeatherAPI = async (locationKey) => {
   try {
     const response = await axios.get(
-      `http://dataservice.accuweather.com/forecasts/v1/daily/5day/${locationKey}?apikey=${apiKey}&language=ko-kr`
+      `https://dataservice.accuweather.com/forecasts/v1/daily/5day/${locationKey}?apikey=${apiKey}&language=ko-kr`
     );
     return response.data;
   } catch (error) {
