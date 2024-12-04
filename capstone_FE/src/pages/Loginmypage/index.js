@@ -3,7 +3,7 @@ import Sidebar from "../../components2/Sidebar";
 import Popup from "../../components/Popup";
 import PopupContent from "../../components/PopupContent";
 import "./Loginmypage.css";
-import { getLocationAPI, getWeatherAPI } from "../../api/weather";
+import { getLocationAPI, getWeatherAPI, getTodaywWeatherAPI } from "../../api/weather"; // getTodaywWeatherAPI 추가
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
@@ -13,17 +13,18 @@ const Loginmypage = () => {
   const location = useLocation();
   const [locationData, setLocationData] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
+  const [dailyWeatherData, setDailyWeatherData] = useState(null); // 최고/최저 기온 데이터
   const [error, setError] = useState(null);
-  const [clothingRecommendations] = useState([
-    "추천1",
-    "추천2",
-    "추천3",
-  ]);
+  const [clothingRecommendations] = useState(["추천1", "추천2", "추천3"]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedRecommendation, setSelectedRecommendation] = useState("");
   const [username, setUsername] = useState("");
 
-  // 토큰 및 사용자 정보 처리
+  // 화씨->섭씨
+  const fahrenheitToCelsius = (fahrenheit) => {
+    return ((fahrenheit - 32) * 5) / 9;
+  };
+
   useEffect(() => {
     const processTokenAndUsername = () => {
       const params = new URLSearchParams(location.search);
@@ -31,11 +32,10 @@ const Loginmypage = () => {
       const usernameParam = params.get("username");
 
       if (token) {
-        // JWT 토큰 저장
         localStorage.setItem("jwtToken", token);
 
         try {
-          const decodedToken = jwtDecode(token); // 토큰 디코드
+          const decodedToken = jwtDecode(token); 
           const extractedUsername = usernameParam || decodedToken.username || "사용자";
           localStorage.setItem("username", extractedUsername);
           setUsername(extractedUsername);
@@ -44,7 +44,6 @@ const Loginmypage = () => {
           alert("로그인 정보를 처리하는 데 문제가 발생했습니다.");
         }
 
-        // URL 정리
         if (location.search.includes("token")) {
           navigate("/loginmypage", { replace: true });
         }
@@ -89,7 +88,7 @@ const Loginmypage = () => {
     }
   }, [locationData]);
 
-  // 날씨 정보 가져오기
+  // 현재 날씨 정보 가져오기
   useEffect(() => {
     if (locationData) {
       getWeatherAPI(locationData.key)
@@ -114,6 +113,21 @@ const Loginmypage = () => {
         .catch(() => {
           setError("날씨 정보를 가져오는 중 오류가 발생했습니다.");
         });
+
+      // 일일 예보(최고/최저 기온) 가져오기
+      getTodaywWeatherAPI(locationData.key)
+        .then((res) => {
+          if (res.DailyForecasts && res.DailyForecasts.length > 0) {
+            const forecast = res.DailyForecasts[0];
+            setDailyWeatherData({
+              maxTemp: fahrenheitToCelsius(forecast.Temperature.Maximum.Value).toFixed(1), // 섭씨로 변환
+              minTemp: fahrenheitToCelsius(forecast.Temperature.Minimum.Value).toFixed(1), // 섭씨로 변환
+            });
+          }
+        })
+        .catch(() => {
+          setError("최고/최저 기온 정보를 가져오는 중 오류가 발생했습니다.");
+        });
     }
   }, [locationData]);
 
@@ -129,7 +143,7 @@ const Loginmypage = () => {
 
   const handleFeedbackSubmit = (feedbackData) => {
     console.log("피드백 데이터:", feedbackData);
-    closePopup(); 
+    closePopup();
   };
 
   return (
@@ -147,6 +161,11 @@ const Loginmypage = () => {
               <div className="current-date">{weatherData.date}</div>
               <div className="temperature-box">
                 <p>기온: {weatherData?.temperature}°C</p>
+                {dailyWeatherData && (
+                  <p>
+                    최고: {dailyWeatherData.maxTemp}°C / 최저: {dailyWeatherData.minTemp}°C
+                  </p>
+                )}
               </div>
               <div className="weather-condition-box">
                 <img
