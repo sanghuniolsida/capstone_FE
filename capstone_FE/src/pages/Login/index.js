@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import { FcGoogle } from "react-icons/fc";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode"; // JWT 디코드 모듈
 import "./Login.css";
 
 const Login = () => {
@@ -20,20 +21,36 @@ const Login = () => {
         password,
       });
 
-      console.log("로그인 응답 데이터:", response.data); 
-      const redirectUrl = response.data; 
-      const queryString = redirectUrl.split("?")[1]; 
+      console.log("로그인 응답 데이터:", response.data);
+      const redirectUrl = response.data;
+      const queryString = redirectUrl.split("?")[1];
       const params = new URLSearchParams(queryString);
 
       const token = params.get("token");
       const username = params.get("username");
 
       if (token && username) {
-        localStorage.setItem("jwtToken", token);
-        localStorage.setItem("username", username);
+        // JWT 토큰 디코딩
+        try {
+          const decodedToken = jwtDecode(token); // JWT 디코드
+          const userId = decodedToken.userId; // userId 가져오기
 
-        alert(`${username}님, 로그인 성공!`);
-        navigate("/loginmypage"); 
+          if (!userId) {
+            alert("JWT 토큰에서 userId를 가져올 수 없습니다.");
+            return;
+          }
+
+          // localStorage에 저장
+          localStorage.setItem("jwtToken", token);
+          localStorage.setItem("username", username);
+          localStorage.setItem("userId", userId); 
+
+          alert(`${username}님, 로그인 성공!`);
+          navigate("/loginmypage");
+        } catch (decodeError) {
+          console.error("JWT 디코딩 오류:", decodeError);
+          alert("로그인 정보를 처리하는 데 문제가 발생했습니다.");
+        }
       } else {
         alert("로그인 응답에서 사용자 정보를 가져올 수 없습니다.");
       }

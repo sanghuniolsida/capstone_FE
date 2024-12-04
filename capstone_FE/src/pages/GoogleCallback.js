@@ -12,26 +12,23 @@ const GoogleCallback = () => {
 
       if (code) {
         try {
-          // 백엔드에 code 전달하여 JWT 토큰 요청
+          // 백엔드로 code 전달하여 JWT 토큰 요청
           const response = await axios.get(
-            `https://moipzy.shop/moipzy/users/google/callback?code=${code}`, // 백엔드 엔드포인트 확인
-            { withCredentials: true } // 쿠키 전달 필요 시 추가
+            `https://moipzy.shop/moipzy/users/google/callback?code=${code}`
           );
 
-          const { token } = response.data; // JWT 토큰 응답
+          const { token, userId, username } = response.data; // 응답에서 토큰 및 사용자 정보 추출
 
-          if (token) {
-            // JWT 토큰 저장
+          if (token && username && userId) {
+            // JWT 토큰 및 사용자 정보 localStorage에 저장
             localStorage.setItem("jwtToken", token);
+            localStorage.setItem("username", username);
+            localStorage.setItem("userId", userId.toString());
 
-            // 디코드하여 사용자 정보 추출
-            const decodedToken = JSON.parse(atob(token.split(".")[1]));
-            localStorage.setItem("username", decodedToken.username);
-
-            alert(`${decodedToken.username}님, 로그인 성공!`);
-            navigate("/loginmypage"); // 로그인 성공 시 리다이렉트
+            alert(`${username}님, 로그인 성공!`);
+            navigate("/loginmypage"); // 로그인 성공 후 리다이렉트
           } else {
-            alert("로그인 토큰을 받지 못했습니다.");
+            alert("로그인 토큰 또는 사용자 정보를 받지 못했습니다.");
             navigate("/login");
           }
         } catch (error) {

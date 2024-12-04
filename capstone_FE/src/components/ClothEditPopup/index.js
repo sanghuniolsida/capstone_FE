@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./ClothEditPopup.css";
 
@@ -7,7 +7,7 @@ const ClothEditPopup = ({ item, onClose }) => {
   const [smallCategory, setSmallCategory] = useState(item.smallCategory || "");
   const [color, setColor] = useState(item.color || "");
   const [degree, setDegree] = useState(item.degree || "");
-  const [isProcessing, setIsProcessing] = useState(false); 
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const largeCategoryOptions = ["OUTER", "TOP", "BOTTOM"];
   const smallCategoryOptions = {
@@ -16,7 +16,32 @@ const ClothEditPopup = ({ item, onClose }) => {
     BOTTOM: ["JEANS", "SWEAT_PANTS", "COTTON_PANTS", "SLACKS", "LINEN_PANTS", "SHORTS"],
   };
   const colorOptions = ["CHARCOAL", "LIGHTGREY", "BLUE", "NAVY", "GREEN", "BLACK", "WHITE", "BEIGE", "RED", "BROWN", "OLIVE", "LIGHTBLUE", "DEEPBLUE", "KHAKI", "CREAM"];
-  const degreeOptions = ["THIN", "LTHIN", "NORMAL", "LTHICK", "THICK"];
+
+  const getDegreeOptions = () => {
+    if (largeCategory === "TOP") {
+      if (smallCategory === "T_SHIRT" || smallCategory === "POLO_SHIRT") {
+        return ["NORMAL"]; 
+      } else {
+        return ["THIN", "NORMAL", "THICK"]; 
+      }
+    } else if (largeCategory === "BOTTOM") {
+      if (smallCategory === "LINEN_PANTS") {
+        return ["THIN"]; 
+      } else {
+        return ["THIN", "LTHIN", "NORMAL", "LTHICK", "THICK"]; 
+      }
+    } else if (largeCategory === "OUTER") {
+      return ["THIN", "NORMAL", "THICK"]; 
+    }
+    return []; 
+  };
+
+  useEffect(() => {
+    const options = getDegreeOptions();
+    if (options.length === 1) {
+      setDegree(options[0]); // 두께 선택지가 하나일 경우 자동 설정
+    }
+  }, [largeCategory, smallCategory]);
 
   const handleUpdateClick = async () => {
     if (!item.clothId) {
@@ -32,7 +57,7 @@ const ClothEditPopup = ({ item, onClose }) => {
         headers: { "Content-Type": "application/json" },
       });
       alert("선택한 옷 정보가 성공적으로 수정되었습니다.");
-      window.location.reload(); // 페이지 새로고침
+      window.location.reload(); 
     } catch (error) {
       console.error("수정 실패:", error.response || error.message);
       alert("선택한 옷 정보 수정 중 오류가 발생했습니다.");
@@ -79,7 +104,7 @@ const ClothEditPopup = ({ item, onClose }) => {
           <div className="form-grid">
             <div className="form-group">
               <label>대분류</label>
-              <select value={largeCategory} onChange={(e) => { setLargeCategory(e.target.value); setSmallCategory(""); }}>
+              <select value={largeCategory} onChange={(e) => { setLargeCategory(e.target.value); setSmallCategory(""); setDegree(""); }}>
                 <option value="">선택</option>
                 {largeCategoryOptions.map((option) => <option key={option} value={option}>{option}</option>)}
               </select>
@@ -102,7 +127,7 @@ const ClothEditPopup = ({ item, onClose }) => {
               <label>두께</label>
               <select value={degree} onChange={(e) => setDegree(e.target.value)}>
                 <option value="">선택</option>
-                {degreeOptions.map((option) => <option key={option} value={option}>{option}</option>)}
+                {getDegreeOptions().map((option) => <option key={option} value={option}>{option}</option>)}
               </select>
             </div>
           </div>

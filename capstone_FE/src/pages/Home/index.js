@@ -13,15 +13,8 @@ const Home = () => {
   const [error, setError] = useState(null);
   const [selectedWeather, setSelectedWeather] = useState('today'); // 'yesterday', 'today', 'tomorrow'
 
+  // 현재 위치 데이터 가져오기
   useEffect(() => {
-    // 로그인 상태 확인
-    const username = localStorage.getItem('username');
-    if (!username) {
-      alert('로그인 상태가 아닙니다. 로그인을 먼저 해주세요.');
-      return;
-    }
-
-    // 현재 위치 데이터 가져오기
     if (!locationData) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -49,6 +42,7 @@ const Home = () => {
     }
   }, [locationData]);
 
+  // 현재 날씨 데이터 가져오기
   useEffect(() => {
     if (locationData) {
       getWeatherAPI(locationData.key)
