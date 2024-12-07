@@ -14,17 +14,19 @@ const PopupContent = ({ recommendation, onSubmit, onClose }) => {
 
   return (
     <div className="popup-layout">
+      {/* 옷 상세 정보 */}
       <div className="clothing-info-section">
-        <h4>● 옷 상세 정보</h4>
+        <h4>★ 옷 상세 정보</h4>
         <ul>
-          <li>아우터: 데님자켓 (두께: 보통)</li>
-          <li>상의: 반팔</li>
-          <li>하의: 슬랙스 (두께: 약간 얇음)</li>
+          <li>※ 아우터: {recommendation.outerSmallCategory || "정보 없음"} (색상: {recommendation.outerColor || "정보 없음"})</li>
+          <li>※ 상의: {recommendation.topSmallCategory || "정보 없음"} (색상: {recommendation.topColor || "정보 없음"})</li>
+          <li>※ 하의: {recommendation.bottomSmallCategory || "정보 없음"} (색상: {recommendation.bottomColor || "정보 없음"})</li>
         </ul>
       </div>
 
+      {/* 옷차림 피드백 */}
       <div className="feedback-section">
-        <h4>● 옷차림 피드백</h4>
+        <h4>★ 옷차림 피드백</h4>
         <div className="feedback-options">
           <label>
             <input
@@ -54,15 +56,29 @@ const PopupContent = ({ recommendation, onSubmit, onClose }) => {
             추움
           </label>
         </div>
-        <p>옷을 클릭하여 두께를 수정할 수 있습니다.</p>
+        <h5>＊옷을 클릭하여 두께를 수정할 수 있습니다.</h5>
       </div>
 
+      {/* 옷 이미지 섹션 */}
       <div className="clothing-image-section">
-        <img src="/images/outerwear.png" alt="Outerwear" className="clothing-item" />
-        <img src="/images/top.png" alt="Top" className="clothing-item" />
-        <img src="/images/bottom.png" alt="Bottom" className="clothing-item" />
+        <img
+          src={recommendation.outerImgPath || "/images/placeholder_outer.png"}
+          alt="Outerwear"
+          className="clothing-item"
+        />
+        <img
+          src={recommendation.topImgPath || "/images/placeholder_top.png"}
+          alt="Top"
+          className="clothing-item"
+        />
+        <img
+          src={recommendation.bottomImgPath || "/images/placeholder_bottom.png"}
+          alt="Bottom"
+          className="clothing-item"
+        />
       </div>
 
+      {/* 완료 버튼 */}
       <button className="submit-button" onClick={handleSubmit}>
         완료
       </button>
