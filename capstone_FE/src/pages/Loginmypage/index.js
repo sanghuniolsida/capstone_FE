@@ -6,18 +6,18 @@ import "./Loginmypage.css";
 import { getLocationAPI, getWeatherAPI, getTodaywWeatherAPI } from "../../api/weather";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
-import { jwtDecode } from "jwt-decode"; // JWT 디코딩 라이브러리
+import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 
 const Loginmypage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [username, setUsername] = useState("");
-  const [loginType, setLoginType] = useState(""); // 로그인 타입 추가
+  const [loginType, setLoginType] = useState(""); 
   const [locationData, setLocationData] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
-  const [dailyWeatherData, setDailyWeatherData] = useState(null); // 최고/최저 기온 데이터
-  const [calendarEvents, setCalendarEvents] = useState([]); // 캘린더 이벤트 데이터
+  const [dailyWeatherData, setDailyWeatherData] = useState(null); 
+  const [calendarEvents, setCalendarEvents] = useState([]); 
   const [clothingRecommendations, setClothingRecommendations] = useState(["추천1", "추천2", "추천3"]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedRecommendation, setSelectedRecommendation] = useState("");
@@ -50,7 +50,7 @@ const Loginmypage = () => {
           setUsername(decodeURIComponent(usernameDecoded));
           setLoginType(loginTypeDecoded); 
 
-          alert(`${decodeURIComponent(usernameDecoded)}님, 로그인 성공!`);
+          alert(`${decodeURIComponent(usernameDecoded)}님, 로그인 되었습니다.`);
 
           // URL에서 쿼리 파라미터 제거
           navigate("/loginmypage", { replace: true });
@@ -84,26 +84,56 @@ const Loginmypage = () => {
         const token = localStorage.getItem("jwtToken");
         const userId = localStorage.getItem("userId");
         const todayDate = new Date().toISOString().split("T")[0]; // 오늘 날짜 (YYYY-MM-DD)
-
+  
         if (token && userId) {
           try {
-            const response = await axios.get(`/calendar/${userId}?date=${todayDate}`, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            });
-
-            setCalendarEvents(response.data.events || []); // 응답 데이터에서 이벤트 추출
+            const response = await axios.get(
+              `https://moipzy.shop/moipzy/calendar/calendar/${userId}?date=${todayDate}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+  
+            console.log("캘린더 응답 데이터:", response.data);
+  
+            if (typeof response.data === "string") {
+              const eventsArray = response.data
+                .split("\n") 
+                .filter((event) => event.trim() !== "") 
+                .map((event) => {
+                  const cleanEvent = event.trim().replace(/^-/, "").trim();
+                  const [title, timeRange] = cleanEvent.split(" (");
+                  return {
+                    title: title.trim(),
+                    time: timeRange?.replace(")", "").trim() || "",
+                  };
+                });
+  
+              setCalendarEvents(eventsArray);
+            } else if (Array.isArray(response.data.events)) {
+              setCalendarEvents(
+                response.data.events.map((event) => ({
+                  title: event.title.replace(/^-/, "").trim(), 
+                  time: event.time || "",
+                }))
+              );
+            } else {
+              console.warn("예상치 못한 데이터 구조:", response.data);
+              setCalendarEvents([]);
+            }
           } catch (error) {
             console.error("캘린더 데이터 요청 실패:", error);
             setCalendarEvents([]);
           }
         }
       };
-
+  
       fetchCalendarEvents();
     }
   }, [loginType]);
+  
 
   // 위치 정보 가져오기
   useEffect(() => {
@@ -166,8 +196,8 @@ const Loginmypage = () => {
           if (res.DailyForecasts && res.DailyForecasts.length > 0) {
             const forecast = res.DailyForecasts[0];
             setDailyWeatherData({
-              maxTemp: fahrenheitToCelsius(forecast.Temperature.Maximum.Value).toFixed(1), // 섭씨로 변환
-              minTemp: fahrenheitToCelsius(forecast.Temperature.Minimum.Value).toFixed(1), // 섭씨로 변환
+              maxTemp: fahrenheitToCelsius(forecast.Temperature.Maximum.Value).toFixed(1), 
+              minTemp: fahrenheitToCelsius(forecast.Temperature.Minimum.Value).toFixed(1), 
             });
           }
         })
@@ -177,36 +207,6 @@ const Loginmypage = () => {
     }
   }, [locationData]);
 
-  // 옷 추천 데이터 요청
-  useEffect(() => {
-    const fetchClothingRecommendations = async () => {
-      const userId = localStorage.getItem("userId");
-      const highTemp = dailyWeatherData ? Math.round(dailyWeatherData.maxTemp) : 0; // 최고 기온 정수 처리
-      const lowTemp = dailyWeatherData ? Math.round(dailyWeatherData.minTemp) : 0; // 최저 기온 정수 처리
-
-      if (userId && highTemp !== null && lowTemp !== null) {
-        try {
-          const response = await axios.get("https://moipzy.shop/moipzy/style/recommend", {
-            params: {
-              userId,
-              highTemp,
-              lowTemp,
-              event: "일반", // 이벤트 기본값 설정
-            },
-          });
-
-          setClothingRecommendations(response.data.recommendations || []);
-        } catch (error) {
-          console.error("옷 추천 데이터 요청 실패:", error);
-          alert("옷 추천 데이터를 가져오는 중 문제가 발생했습니다.");
-          // 옷 추천 실패 시 기본값으로 유지
-          setClothingRecommendations(["추천1", "추천2", "추천3"]);
-        }
-      }
-    };
-
-    fetchClothingRecommendations();
-  }, [dailyWeatherData]);
 
   const handleRecommendationClick = (recommendation) => {
     setSelectedRecommendation(recommendation);
@@ -263,17 +263,17 @@ const Loginmypage = () => {
         {/* 캘린더 이벤트 폼 (구글 로그인일 경우에만 표시) */}
         {loginType === "google" && (
           <div className="calendar-section">
-            <h3>오늘의 일정</h3>
+            <h3>Google calendar</h3>
             {calendarEvents.length > 0 ? (
               <ul>
                 {calendarEvents.map((event, index) => (
                   <li key={index}>
-                    <strong>{event.title}</strong> - {event.time}
+                    <strong>{event.title}</strong>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p>오늘 일정이 없습니다.</p>
+              <p>표시한 일정이 없습니다.</p>
             )}
           </div>
         )}
@@ -295,6 +295,7 @@ const Loginmypage = () => {
             ))}
           </div>
         </div>
+
 
         <Popup
           isOpen={isPopupOpen}
