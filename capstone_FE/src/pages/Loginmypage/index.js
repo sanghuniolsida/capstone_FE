@@ -18,7 +18,7 @@ const Loginmypage = () => {
   const [weatherData, setWeatherData] = useState(null);
   const [dailyWeatherData, setDailyWeatherData] = useState(null); 
   const [calendarEvents, setCalendarEvents] = useState([]); 
-  const [clothingRecommendations, setClothingRecommendations] = useState(["추천1", "추천2", "추천3"]);
+  const [clothingRecommendations] = useState(["추천1", "추천2", "추천3"]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedRecommendation, setSelectedRecommendation] = useState("");
   const [error, setError] = useState(null);
@@ -278,36 +278,66 @@ const Loginmypage = () => {
           </div>
         )}
 
-        <div className="clothing-recommendation-section">
-          <div className="recommendation-header">
-            <h3>Today's Clothing Recommendation</h3>
-          </div>
-          <div className="clothing-boxes">
-            {clothingRecommendations.map((recommendation, index) => (
-              <div
-                className="clothing-box"
-                key={index}
-                onClick={() => handleRecommendationClick(recommendation)}
-              >
-                <p>{recommendation}</p>
-                <div className="clothing-image">[추천 이미지]</div>
-              </div>
-            ))}
-          </div>
+      <div className="clothing-recommendation-section">
+        <div className="recommendation-header">
+          <h3>Today's Clothing Recommendation</h3>
         </div>
+        <div className="clothing-boxes">
+          {clothingRecommendations.map((recommendation, index) => (
+            <div
+              className="clothing-box"
+              key={index}
+              onClick={() => handleRecommendationClick(recommendation)} // 클릭 시 추천 데이터를 팝업으로 전달
+            >
+              <h4>추천 {index + 1}</h4>
+              {/* 상의 */}
+              <div className="clothing-item">
+                <div className="clothing-image-container">
+                  <img
+                    src={recommendation.topImgPath || "placeholder_top.png"}
+                    alt="상의 이미지"
+                    className="clothing-image"
+                  />
+                </div>
+              </div>
+              {/* 하의 */}
+              <div className="clothing-item">
+                <div className="clothing-image-container">
+                  <img
+                    src={recommendation.bottomImgPath || "placeholder_bottom.png"}
+                    alt="하의 이미지"
+                    className="clothing-image"
+                  />
+                </div>
+              </div>
+              {/* 아우터 */}
+              <div className="clothing-item">
+                <div className="clothing-image-container">
+                  <img
+                    src={recommendation.outerImgPath || "placeholder_outer.png"}
+                    alt="아우터 이미지"
+                    className="clothing-image"
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
-
-        <Popup
-          isOpen={isPopupOpen}
-          onClose={closePopup}
-          content={
+      <Popup
+        isOpen={isPopupOpen}
+        onClose={closePopup}
+        content={
+          selectedRecommendation && (
             <PopupContent
-              recommendation={selectedRecommendation}
+              recommendation={selectedRecommendation} // 선택된 추천 데이터를 팝업에 전달
               onSubmit={handleFeedbackSubmit}
               onClose={closePopup}
             />
-          }
-        />
+          )
+        }
+      />
       </div>
     </Sidebar>
   );
