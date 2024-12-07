@@ -6,7 +6,7 @@ import "./Loginmypage.css";
 import { getLocationAPI, getWeatherAPI, getTodaywWeatherAPI } from "../../api/weather";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
-import { jwtDecode } from "jwt-decode"; 
+import { jwtDecode } from "jwt-decode"; // 수정: jwtDecode 불러오는 방식 수정
 
 const Loginmypage = () => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const Loginmypage = () => {
   const [username, setUsername] = useState("");
   const [locationData, setLocationData] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
-  const [dailyWeatherData, setDailyWeatherData] = useState(null); 
+  const [dailyWeatherData, setDailyWeatherData] = useState(null); // 최고/최저 기온 데이터
   const [error, setError] = useState(null);
   const [clothingRecommendations] = useState(["추천1", "추천2", "추천3"]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -25,6 +25,7 @@ const Loginmypage = () => {
     return ((fahrenheit - 32) * 5) / 9;
   };
 
+  // URL에서 token과 username 가져와 처리
   useEffect(() => {
     const processTokenAndUserDetails = () => {
       const params = new URLSearchParams(location.search);
@@ -33,6 +34,7 @@ const Loginmypage = () => {
   
       console.log("Token from URL:", token);
       console.log("Username from URL:", usernameParam);
+
   
       if (token) {
         try {
@@ -42,13 +44,14 @@ const Loginmypage = () => {
           const userId = decodedToken.userId; 
           const usernameDecoded = usernameParam || decodedToken.username || "사용자";
   
-          console.log("Decoded Token:", decodedToken);
-
           localStorage.setItem("userId", userId);
           localStorage.setItem("username", decodeURIComponent(usernameDecoded));
+  
           setUsername(decodeURIComponent(usernameDecoded));
   
           alert(`${decodeURIComponent(usernameDecoded)}님, 로그인 성공!`);
+  
+          // URL에서 쿼리 파라미터 제거
           navigate("/loginmypage", { replace: true });
         } catch (error) {
           console.error("JWT 디코딩 오류:", error);
@@ -133,8 +136,8 @@ const Loginmypage = () => {
           if (res.DailyForecasts && res.DailyForecasts.length > 0) {
             const forecast = res.DailyForecasts[0];
             setDailyWeatherData({
-              maxTemp: fahrenheitToCelsius(forecast.Temperature.Maximum.Value).toFixed(1), 
-              minTemp: fahrenheitToCelsius(forecast.Temperature.Minimum.Value).toFixed(1), 
+              maxTemp: fahrenheitToCelsius(forecast.Temperature.Maximum.Value).toFixed(1), // 섭씨로 변환
+              minTemp: fahrenheitToCelsius(forecast.Temperature.Minimum.Value).toFixed(1), // 섭씨로 변환
             });
           }
         })
@@ -162,7 +165,6 @@ const Loginmypage = () => {
   return (
     <Sidebar>
       <div className="loginmypage-content">
-        <h2>환영합니다, {username}님!</h2>
         <div className="weather-section">
           {error ? (
             <p>{error}</p>

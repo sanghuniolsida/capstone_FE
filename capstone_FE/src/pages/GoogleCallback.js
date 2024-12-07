@@ -16,16 +16,16 @@ const GoogleCallback = () => {
           const response = await axios.get(
             `https://moipzy.shop/moipzy/users/google/callback?code=${code}`
           );
+
           const { token } = response.data; 
 
           if (token) {
-            console.log("받은 토큰: ", token);
             const decodedToken = jwtDecode(token);
             console.log("Decoded Token: ", decodedToken);
 
             const userId = decodedToken.userId; 
             const username = decodedToken.username; 
-            
+
             localStorage.setItem("jwtToken", token);
             localStorage.setItem("userId", userId); 
             localStorage.setItem("username", username);
