@@ -17,8 +17,7 @@ const Sidebar = ({ children }) => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('username');
-    localStorage.removeItem('jwtToken');
+    localStorage.clear();
     alert('로그아웃 되었습니다.');
     setUsername(null);
     navigate('/'); 
