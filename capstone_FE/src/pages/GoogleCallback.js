@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 const GoogleCallback = () => {
   const navigate = useNavigate();
@@ -12,23 +13,27 @@ const GoogleCallback = () => {
 
       if (code) {
         try {
-          // 백엔드로 code 전달하여 JWT 토큰 요청
           const response = await axios.get(
             `https://moipzy.shop/moipzy/users/google/callback?code=${code}`
           );
+          const { token } = response.data; 
 
-          const { token, userId, username } = response.data; // 응답에서 토큰 및 사용자 정보 추출
+          if (token) {
+            console.log("받은 토큰: ", token);
+            const decodedToken = jwtDecode(token);
+            console.log("Decoded Token: ", decodedToken);
 
-          if (token && username && userId) {
-            // JWT 토큰 및 사용자 정보 localStorage에 저장
+            const userId = decodedToken.userId; 
+            const username = decodedToken.username; 
+            
             localStorage.setItem("jwtToken", token);
+            localStorage.setItem("userId", userId); 
             localStorage.setItem("username", username);
-            localStorage.setItem("userId", userId.toString());
 
             alert(`${username}님, 로그인 성공!`);
             navigate("/loginmypage"); // 로그인 성공 후 리다이렉트
           } else {
-            alert("로그인 토큰 또는 사용자 정보를 받지 못했습니다.");
+            alert("로그인 토큰을 받지 못했습니다.");
             navigate("/login");
           }
         } catch (error) {

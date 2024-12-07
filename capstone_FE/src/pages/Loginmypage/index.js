@@ -3,22 +3,22 @@ import Sidebar from "../../components2/Sidebar";
 import Popup from "../../components/Popup";
 import PopupContent from "../../components/PopupContent";
 import "./Loginmypage.css";
-import { getLocationAPI, getWeatherAPI, getTodaywWeatherAPI } from "../../api/weather"; // getTodaywWeatherAPI 추가
+import { getLocationAPI, getWeatherAPI, getTodaywWeatherAPI } from "../../api/weather";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; 
 
 const Loginmypage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [username, setUsername] = useState("");
   const [locationData, setLocationData] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
-  const [dailyWeatherData, setDailyWeatherData] = useState(null); // 최고/최저 기온 데이터
+  const [dailyWeatherData, setDailyWeatherData] = useState(null); 
   const [error, setError] = useState(null);
   const [clothingRecommendations] = useState(["추천1", "추천2", "추천3"]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedRecommendation, setSelectedRecommendation] = useState("");
-  const [username, setUsername] = useState("");
 
   // 화씨->섭씨
   const fahrenheitToCelsius = (fahrenheit) => {
@@ -26,38 +26,51 @@ const Loginmypage = () => {
   };
 
   useEffect(() => {
-    const processTokenAndUsername = () => {
+    const processTokenAndUserDetails = () => {
       const params = new URLSearchParams(location.search);
       const token = params.get("token");
       const usernameParam = params.get("username");
-
+  
+      console.log("Token from URL:", token);
+      console.log("Username from URL:", usernameParam);
+  
       if (token) {
-        localStorage.setItem("jwtToken", token);
-
         try {
-          const decodedToken = jwtDecode(token); 
-          const extractedUsername = usernameParam || decodedToken.username || "사용자";
-          localStorage.setItem("username", extractedUsername);
-          setUsername(extractedUsername);
+          localStorage.setItem("jwtToken", token);
+  
+          const decodedToken = jwtDecode(token);
+          const userId = decodedToken.userId; 
+          const usernameDecoded = usernameParam || decodedToken.username || "사용자";
+  
+          console.log("Decoded Token:", decodedToken);
+
+          localStorage.setItem("userId", userId);
+          localStorage.setItem("username", decodeURIComponent(usernameDecoded));
+          setUsername(decodeURIComponent(usernameDecoded));
+  
+          alert(`${decodeURIComponent(usernameDecoded)}님, 로그인 성공!`);
+          navigate("/loginmypage", { replace: true });
         } catch (error) {
           console.error("JWT 디코딩 오류:", error);
           alert("로그인 정보를 처리하는 데 문제가 발생했습니다.");
+          navigate("/login");
         }
-
-        if (location.search.includes("token")) {
-          navigate("/loginmypage", { replace: true });
-        }
-      } else if (!localStorage.getItem("jwtToken")) {
-        alert("로그인 정보가 없습니다. 다시 로그인해주세요.");
-        navigate("/login");
       } else {
+        const storedToken = localStorage.getItem("jwtToken");
         const storedUsername = localStorage.getItem("username");
-        setUsername(storedUsername || "사용자");
+  
+        if (storedToken && storedUsername) {
+          setUsername(storedUsername);
+        } else {
+          alert("로그인이 필요합니다.");
+          navigate("/login");
+        }
       }
     };
-
-    processTokenAndUsername();
+  
+    processTokenAndUserDetails();
   }, [location, navigate]);
+  
 
   // 위치 정보 가져오기
   useEffect(() => {
@@ -120,8 +133,8 @@ const Loginmypage = () => {
           if (res.DailyForecasts && res.DailyForecasts.length > 0) {
             const forecast = res.DailyForecasts[0];
             setDailyWeatherData({
-              maxTemp: fahrenheitToCelsius(forecast.Temperature.Maximum.Value).toFixed(1), // 섭씨로 변환
-              minTemp: fahrenheitToCelsius(forecast.Temperature.Minimum.Value).toFixed(1), // 섭씨로 변환
+              maxTemp: fahrenheitToCelsius(forecast.Temperature.Maximum.Value).toFixed(1), 
+              minTemp: fahrenheitToCelsius(forecast.Temperature.Minimum.Value).toFixed(1), 
             });
           }
         })
@@ -149,6 +162,7 @@ const Loginmypage = () => {
   return (
     <Sidebar>
       <div className="loginmypage-content">
+        <h2>환영합니다, {username}님!</h2>
         <div className="weather-section">
           {error ? (
             <p>{error}</p>
