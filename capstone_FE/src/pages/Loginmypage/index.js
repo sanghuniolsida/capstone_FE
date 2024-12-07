@@ -6,51 +6,52 @@ import "./Loginmypage.css";
 import { getLocationAPI, getWeatherAPI, getTodaywWeatherAPI } from "../../api/weather";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
-import { jwtDecode } from "jwt-decode"; // 수정: jwtDecode 불러오는 방식 수정
+import { jwtDecode } from "jwt-decode"; // JWT 디코딩 라이브러리
+import axios from "axios";
 
 const Loginmypage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [username, setUsername] = useState("");
+  const [loginType, setLoginType] = useState(""); // 로그인 타입 추가
   const [locationData, setLocationData] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
   const [dailyWeatherData, setDailyWeatherData] = useState(null); // 최고/최저 기온 데이터
-  const [error, setError] = useState(null);
-  const [clothingRecommendations] = useState(["추천1", "추천2", "추천3"]);
+  const [calendarEvents, setCalendarEvents] = useState([]); // 캘린더 이벤트 데이터
+  const [clothingRecommendations, setClothingRecommendations] = useState(["추천1", "추천2", "추천3"]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedRecommendation, setSelectedRecommendation] = useState("");
+  const [error, setError] = useState(null);
 
-  // 화씨->섭씨
+  // 화씨->섭씨 변환 함수
   const fahrenheitToCelsius = (fahrenheit) => {
     return ((fahrenheit - 32) * 5) / 9;
   };
 
-  // URL에서 token과 username 가져와 처리
   useEffect(() => {
     const processTokenAndUserDetails = () => {
       const params = new URLSearchParams(location.search);
       const token = params.get("token");
       const usernameParam = params.get("username");
-  
-      console.log("Token from URL:", token);
-      console.log("Username from URL:", usernameParam);
 
-  
       if (token) {
         try {
           localStorage.setItem("jwtToken", token);
-  
+
           const decodedToken = jwtDecode(token);
-          const userId = decodedToken.userId; 
+          const userId = decodedToken.userId;
+          const loginTypeDecoded = decodedToken.loginType; 
           const usernameDecoded = usernameParam || decodedToken.username || "사용자";
-  
+
           localStorage.setItem("userId", userId);
           localStorage.setItem("username", decodeURIComponent(usernameDecoded));
-  
+          localStorage.setItem("loginType", loginTypeDecoded); 
+
           setUsername(decodeURIComponent(usernameDecoded));
-  
+          setLoginType(loginTypeDecoded); 
+
           alert(`${decodeURIComponent(usernameDecoded)}님, 로그인 성공!`);
-  
+
           // URL에서 쿼리 파라미터 제거
           navigate("/loginmypage", { replace: true });
         } catch (error) {
@@ -61,19 +62,48 @@ const Loginmypage = () => {
       } else {
         const storedToken = localStorage.getItem("jwtToken");
         const storedUsername = localStorage.getItem("username");
-  
+        const storedLoginType = localStorage.getItem("loginType");
+
         if (storedToken && storedUsername) {
           setUsername(storedUsername);
+          setLoginType(storedLoginType || "");
         } else {
           alert("로그인이 필요합니다.");
           navigate("/login");
         }
       }
     };
-  
+
     processTokenAndUserDetails();
   }, [location, navigate]);
-  
+
+  // 캘린더 데이터 요청
+  useEffect(() => {
+    if (loginType === "google") {
+      const fetchCalendarEvents = async () => {
+        const token = localStorage.getItem("jwtToken");
+        const userId = localStorage.getItem("userId");
+        const todayDate = new Date().toISOString().split("T")[0]; // 오늘 날짜 (YYYY-MM-DD)
+
+        if (token && userId) {
+          try {
+            const response = await axios.get(`/calendar/${userId}?date=${todayDate}`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+
+            setCalendarEvents(response.data.events || []); // 응답 데이터에서 이벤트 추출
+          } catch (error) {
+            console.error("캘린더 데이터 요청 실패:", error);
+            setCalendarEvents([]);
+          }
+        }
+      };
+
+      fetchCalendarEvents();
+    }
+  }, [loginType]);
 
   // 위치 정보 가져오기
   useEffect(() => {
@@ -147,6 +177,37 @@ const Loginmypage = () => {
     }
   }, [locationData]);
 
+  // 옷 추천 데이터 요청
+  useEffect(() => {
+    const fetchClothingRecommendations = async () => {
+      const userId = localStorage.getItem("userId");
+      const highTemp = dailyWeatherData ? Math.round(dailyWeatherData.maxTemp) : 0; // 최고 기온 정수 처리
+      const lowTemp = dailyWeatherData ? Math.round(dailyWeatherData.minTemp) : 0; // 최저 기온 정수 처리
+
+      if (userId && highTemp !== null && lowTemp !== null) {
+        try {
+          const response = await axios.get("https://moipzy.shop/moipzy/style/recommend", {
+            params: {
+              userId,
+              highTemp,
+              lowTemp,
+              event: "일반", // 이벤트 기본값 설정
+            },
+          });
+
+          setClothingRecommendations(response.data.recommendations || []);
+        } catch (error) {
+          console.error("옷 추천 데이터 요청 실패:", error);
+          alert("옷 추천 데이터를 가져오는 중 문제가 발생했습니다.");
+          // 옷 추천 실패 시 기본값으로 유지
+          setClothingRecommendations(["추천1", "추천2", "추천3"]);
+        }
+      }
+    };
+
+    fetchClothingRecommendations();
+  }, [dailyWeatherData]);
+
   const handleRecommendationClick = (recommendation) => {
     setSelectedRecommendation(recommendation);
     setIsPopupOpen(true);
@@ -198,6 +259,24 @@ const Loginmypage = () => {
             <p>로딩 중...</p>
           )}
         </div>
+
+        {/* 캘린더 이벤트 폼 (구글 로그인일 경우에만 표시) */}
+        {loginType === "google" && (
+          <div className="calendar-section">
+            <h3>오늘의 일정</h3>
+            {calendarEvents.length > 0 ? (
+              <ul>
+                {calendarEvents.map((event, index) => (
+                  <li key={index}>
+                    <strong>{event.title}</strong> - {event.time}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>오늘 일정이 없습니다.</p>
+            )}
+          </div>
+        )}
 
         <div className="clothing-recommendation-section">
           <div className="recommendation-header">
