@@ -7,28 +7,20 @@ import Country from "./pages/Country";
 import Mycloth from "./pages/Mycloth";
 import Clothregister from "./pages/Clothregister";
 import GoogleCallback from "./pages/GoogleCallback";
-import ProtectedRoute from "./components/ProtectedRoute"; // ProtectedRoute 가져오기
+import ProtectedRoute from "./components/ProtectedRoute"; 
 
 function App() {
   return (
     <div>
       <Routes>
-        {/* 비로그인 접근 가능한 라우트 */}
         <Route path="/" element={<Navigate to="/home" />} />
         <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/google/callback" element={<GoogleCallback />} />
+        <Route path="/loginmypage" element={<Loginmypage />} />
 
         {/* 로그인 필요 라우트 */}
-        <Route
-          path="/loginmypage"
-          element={
-            <ProtectedRoute>
-              <Loginmypage />
-            </ProtectedRoute>
-          }
-        />
         <Route
           path="/country"
           element={

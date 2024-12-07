@@ -28,7 +28,6 @@ const Login = () => {
 
       const token = params.get("token");
       const username = params.get("username");
-
       if (token && username) {
         // JWT 토큰 디코딩
         try {
