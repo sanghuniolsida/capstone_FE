@@ -20,35 +20,51 @@
   }
   
   .clothing-recommendation-section {
-    width: 100%;
-    max-width: 1200px;
-    margin-right: 170px;
     text-align: center;
-    margin-top: -50px;
+    margin: 20px;
+    margin-top: 350px;
+    margin-right: 200px;
   }
   
   .clothing-boxes {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-top: 10px;
+    justify-content: center;
+    gap: 50px;
   }
   
-  .clothing-box {
-    flex: 1;
-    margin: 0 10px;
+  .clothingBox {
+    border: 2px solid rgb(86, 85, 85); 
+    padding: 10px;
+    width: 150px; 
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    border-radius: 10px; 
+    background-color: #f9f9f9;
+  }
+  
+  .clothingItem {
+    margin: 10px 0; 
     text-align: center;
   }
   
-  .clothing-image {
-    width: 100%;
-    max-width: 150px;
-    height: 350%;
-    margin-top: 10px;
-    background-color: #f0f0f0;
-    padding: 10px;
+  .clothing-image-container {
+    width: 100px;
+    height: 100px;
+    border: 2px solid rgb(76, 76, 77); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border-radius: 10px;
+    overflow: hidden; /* 이미지가 박스를 넘어가지 않도록 */
   }
+  
+  .clothing-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover; /* 이미지 비율 유지 */
+  }
+  
   
   .calendar-section ul {
     list-style: disc; 

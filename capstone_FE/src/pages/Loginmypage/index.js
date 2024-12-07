@@ -18,7 +18,7 @@ const Loginmypage = () => {
   const [weatherData, setWeatherData] = useState(null);
   const [dailyWeatherData, setDailyWeatherData] = useState(null); 
   const [calendarEvents, setCalendarEvents] = useState([]); 
-  const [clothingRecommendations, setClothingRecommendations] = useState(["추천1", "추천2", "추천3"]);
+  const [clothingRecommendations, setClothingRecommendations] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedRecommendation, setSelectedRecommendation] = useState("");
   const [error, setError] = useState(null);
@@ -207,6 +207,34 @@ const Loginmypage = () => {
     }
   }, [locationData]);
 
+  //옷차림 추천API
+  useEffect(() => {
+    const fetchClothingRecommendations = async () => {
+      const userId = localStorage.getItem("userId");
+      const highTemp = Math.round(dailyWeatherData?.maxTemp || 0); 
+      const lowTemp = Math.round(dailyWeatherData?.minTemp || 0); 
+      const baseUrl = "https://moipzy.shop/moipzy/style/recommend";
+
+      if (userId && highTemp && lowTemp) {
+        try {
+          const eventParam = loginType === "google" && calendarEvents.length > 0
+            ? calendarEvents[0]?.title || ""
+            : "일반";
+          const url = `${baseUrl}?userId=${userId}&highTemp=${highTemp}&lowTemp=${lowTemp}&event=${eventParam}`;
+
+          const response = await axios.get(url);
+          setClothingRecommendations(response.data || []);
+        } catch (error) {
+          console.error("옷 추천 데이터 요청 실패:", error);
+          alert("옷 추천 데이터를 가져오는 중 문제가 발생했습니다.");
+          setClothingRecommendations([]);
+        }
+      }
+    };
+
+    fetchClothingRecommendations();
+  }, [dailyWeatherData, loginType, calendarEvents]);
+
 
   const handleRecommendationClick = (recommendation) => {
     setSelectedRecommendation(recommendation);
@@ -260,7 +288,7 @@ const Loginmypage = () => {
           )}
         </div>
 
-        {/* 캘린더 이벤트 폼 (구글 로그인일 경우에만 표시) */}
+        {/* 캘린더 폼 (구글 로그인일 경우에만 표시) */}
         {loginType === "google" && (
           <div className="calendar-section">
             <h3>Google calendar</h3>
@@ -278,36 +306,67 @@ const Loginmypage = () => {
           </div>
         )}
 
-        <div className="clothing-recommendation-section">
-          <div className="recommendation-header">
-            <h3>Today's Clothing Recommendation</h3>
+          <div className="clothing-recommendation-section">
+            <div className="recommendation-header">
+              <h3>Today's Clothing Recommendation</h3>
+            </div>
+            <div className="clothing-boxes">
+              {clothingRecommendations.map((recommendation, index) => (
+                <div
+                  className="clothingBox"
+                  key={index}
+                  onClick={() => handleRecommendationClick(recommendation)} // 클릭 시 추천 데이터를 팝업으로 전달
+                >
+                  <h4>추천 {index + 1}</h4>
+                  {/* 상의 */}
+                  <div className="clothingItem">
+                    <div className="clothing-image-container">
+                      <img
+                        src={recommendation.topImgPath || "placeholder_top.png"}
+                        alt="상의 이미지"
+                        className="clothing-image"
+                      />
+                    </div>
+                  </div>
+                  {/* 하의 */}
+                  <div className="clothingItem">
+                    <div className="clothing-image-container">
+                      <img
+                        src={recommendation.bottomImgPath || "placeholder_bottom.png"}
+                        alt="하의 이미지"
+                        className="clothing-image"
+                      />
+                    </div>
+                  </div>
+                  {/* 아우터 */}
+                  <div className="clothingItem">
+                    <div className="clothing-image-container">
+                      <img
+                        src={recommendation.outerImgPath || "placeholder_outer.png"}
+                        alt="아우터 이미지"
+                        className="clothing-image"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="clothing-boxes">
-            {clothingRecommendations.map((recommendation, index) => (
-              <div
-                className="clothing-box"
-                key={index}
-                onClick={() => handleRecommendationClick(recommendation)}
-              >
-                <p>{recommendation}</p>
-                <div className="clothing-image">[추천 이미지]</div>
-              </div>
-            ))}
-          </div>
-        </div>
 
+          <Popup
+            isOpen={isPopupOpen}
+            onClose={closePopup}
+            content={
+              selectedRecommendation && (
+                <PopupContent
+                  recommendation={selectedRecommendation} // 선택된 추천 데이터를 팝업에 전달
+                  onSubmit={handleFeedbackSubmit}
+                  onClose={closePopup}
+                />
+              )
+            }
+          />
 
-        <Popup
-          isOpen={isPopupOpen}
-          onClose={closePopup}
-          content={
-            <PopupContent
-              recommendation={selectedRecommendation}
-              onSubmit={handleFeedbackSubmit}
-              onClose={closePopup}
-            />
-          }
-        />
       </div>
     </Sidebar>
   );
