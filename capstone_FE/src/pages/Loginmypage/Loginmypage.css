@@ -13,7 +13,8 @@
     text-align: center;
     padding: 20px;
     border-radius: 10px;
-    background-color: #f0f0f0;
+    border: 1px solid black;
+    background-color: #f5f6f7;
     margin-top: 175px;
     margin-right: 40px;
   }
@@ -49,5 +50,17 @@
     border-radius: 10px;
   }
   
+  .calendar-section ul {
+    list-style: disc; 
+    padding: 0;
+    margin: 0;
+    text-align: left; 
+  }
 
-  
+  .calendar-section li {
+    display: list-item; 
+    text-align: center; 
+    list-style-position: inside; 
+    padding: 10px 0;
+    font-size: 16px;
+  }
