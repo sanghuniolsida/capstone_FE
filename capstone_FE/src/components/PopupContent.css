@@ -4,7 +4,7 @@
     "image info"
     "image feedback"
     "image feedback"
-    "image buttons"; /* 버튼 섹션을 새 행으로 추가 */
+    "image buttons"; 
   grid-template-columns: 1fr 1fr; /* 이미지와 나머지 영역의 비율을 동일하게 설정 */
   grid-gap: 20px;
   padding: 20px;

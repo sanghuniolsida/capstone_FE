@@ -21,7 +21,6 @@
     height: 550px; 
     max-width: 90%; 
     max-height: 90%; 
-    overflow-y: auto; /* 콘텐츠가 초과될 경우 스크롤 추가 */
   }
   
   

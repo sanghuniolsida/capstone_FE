@@ -9,9 +9,9 @@ const PopupContent = ({ recommendation, onSubmit, onClose }) => {
     setFeedback(e.target.value);
   };
 
-  const handleSubmit = async () => {
+  const handleFeedbackSubmit = async () => {
     try {
-      // 1. 피드백 저장 API 호출 (PATCH)
+      // 피드백 저장 API 호출 (PATCH)
       const feedbackData = {
         styleId: recommendation.styleId,
         outerId: recommendation.outerId,
@@ -25,7 +25,18 @@ const PopupContent = ({ recommendation, onSubmit, onClose }) => {
       });
       alert("피드백이 성공적으로 저장되었습니다.");
 
-      // 2. 오늘 입은 옷차림 저장 API 호출 (POST)
+      // 부모 컴포넌트로 전달 후 팝업 닫기
+      onSubmit({ recommendation, feedback });
+      onClose();
+    } catch (error) {
+      console.error("피드백 저장 실패:", error.response || error.message);
+      alert("피드백 저장 중 오류가 발생했습니다.");
+    }
+  };
+
+  const handleTodayMoipzySubmit = async () => {
+    try {
+      // 오늘 입은 옷차림 저장 API 호출 (POST)
       const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD 형식
       const wearData = {
         userId: localStorage.getItem("userId"),
@@ -43,11 +54,10 @@ const PopupContent = ({ recommendation, onSubmit, onClose }) => {
       alert("오늘 입은 옷차림이 성공적으로 저장되었습니다.");
 
       // 부모 컴포넌트로 전달 후 팝업 닫기
-      onSubmit({ recommendation, feedback });
       onClose();
     } catch (error) {
-      console.error("API 호출 실패:", error.response || error.message);
-      alert("피드백 저장 또는 옷차림 저장 중 오류가 발생했습니다.");
+      console.error("오늘 입은 옷차림 저장 실패:", error.response || error.message);
+      alert("오늘 입은 옷차림 저장 중 오류가 발생했습니다.");
     }
   };
 
@@ -98,11 +108,12 @@ const PopupContent = ({ recommendation, onSubmit, onClose }) => {
         <h5>＊옷을 클릭하여 두께를 수정할 수 있습니다.</h5>
       </div>
 
+      {/* 버튼 섹션 */}
       <div className="button-section">
-        <button className="submit-button" onClick={handleSubmit}>
-        피드백 등록
+        <button className="submit-button" onClick={handleFeedbackSubmit}>
+          피드백 등록
         </button>
-        <button className="submit-button" onClick={handleSubmit}>
+        <button className="submit-button" onClick={handleTodayMoipzySubmit}>
           TODAY MOIPZY
         </button>
       </div>
