@@ -1,0 +1,58 @@
+.feedback-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .clothing-info-section {
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  
+  .feedback-section {
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  
+  .feedback-options label {
+    margin-right: 10px;
+    display: inline-block;
+  }
+  
+  .button-section {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .submit-button {
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .submit-button:hover {
+    background: #0056b3;
+  }
+  
+  .clothing-image-section {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+  
+  .clothing-item {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: cover;
+  }
+  

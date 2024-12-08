@@ -92,7 +92,7 @@ const ClothEditPopup = ({ item, onClose }) => {
     <div className="cloth-edit-popup-overlay">
       <div className="cloth-edit-popup">
         <div className="popup-header">
-          <h3>옷 정보 수정/삭제</h3>
+          {/*<h3>옷 정보 수정/삭제</h3>*/}
           <button onClick={onClose} className="close-button" disabled={isProcessing}>
             X
           </button>
