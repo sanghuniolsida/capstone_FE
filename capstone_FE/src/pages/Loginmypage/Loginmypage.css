@@ -22,7 +22,7 @@
   .clothing-recommendation-section {
     text-align: center;
     margin: 20px;
-    margin-top: 350px;
+    margin-top: 445px;
     margin-right: 200px;
   }
   
@@ -35,7 +35,7 @@
   .clothingBox {
     border: 2px solid rgb(86, 85, 85); 
     padding: 10px;
-    width: 150px; 
+    width: 160px; 
     display: flex;
     flex-direction: column; 
     align-items: center; 
@@ -49,8 +49,8 @@
   }
   
   .clothing-image-container {
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     border: 2px solid rgb(76, 76, 77); 
     display: flex;
     justify-content: center;
@@ -80,3 +80,60 @@
     padding: 10px 0;
     font-size: 16px;
   }
+
+  @keyframes glowing-border {
+    0% {
+      border-image-source: linear-gradient(90deg, #00f, #0ff, #00f); /* 파란색에서 청록색으로 이동 */
+      border-image-slice: 1;
+    }
+    50% {
+      border-image-source: linear-gradient(90deg, #0ff, #00f, #0ff); /* 청록색에서 파란색으로 이동 */
+      border-image-slice: 1;
+    }
+    100% {
+      border-image-source: linear-gradient(90deg, #00f, #0ff, #00f); /* 다시 원래대로 */
+      border-image-slice: 1;
+    }
+  }
+  
+  .calendar-section {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 250px;
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    border: 5px solid transparent; /* 테두리를 투명하게 설정 */
+    background-color: #f5f6f7;
+    margin-top: 175px;
+    margin-right: 40px;
+  
+    /* 애니메이션 추가 */
+    animation: glowing-border 2s infinite linear; /* 2초 주기로 애니메이션 반복 */
+    border-image-source: linear-gradient(90deg, #00f, #0ff, #00f); /* 기본 테두리 색상 설정 */
+    border-image-slice: 1; /* 테두리 안쪽에 적용 */
+  }
+  
+
+  .floating-button {
+    position: fixed;
+    bottom: 20px; /* 페이지 하단에서 20px 위 */
+    right: 20px; /* 페이지 오른쪽에서 20px 왼쪽 */
+    background-color: #6200ea; /* 버튼 배경색 */
+    color: white; /* 버튼 텍스트 색 */
+    border: none;
+    border-radius: 50px; /* 둥근 버튼 */
+    padding: 15px 30px; /* 버튼 크기 조정 */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 1000; /* 다른 요소 위에 위치 */
+    transition: background-color 0.3s, transform 0.3s; /* 효과 추가 */
+  }
+  
+  .floating-button:hover {
+    background-color: #3700b3; /* 호버 시 배경색 */
+    transform: scale(1.1); /* 버튼 확대 효과 */
+  }
+  

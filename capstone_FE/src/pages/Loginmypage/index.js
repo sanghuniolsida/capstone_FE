@@ -366,7 +366,10 @@ const Loginmypage = () => {
               )
             }
           />
-
+       {/* 오른쪽 하단에 고정된 버튼 */}
+        <button className="floating-button" onClick={() => alert("버튼 클릭!")}>
+        TODAY MOIPZY
+        </button>
       </div>
     </Sidebar>
   );
