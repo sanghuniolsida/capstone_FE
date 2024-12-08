@@ -11,6 +11,7 @@ const Clothregister = () => {
   const [color, setColor] = useState("");
   const [degree, setDegree] = useState("");
   const [link, setLink] = useState("");
+  const [productName, setProductName] = useState(""); 
 
   const smallCategoryOptions = {
     OUTER: [
@@ -27,8 +28,8 @@ const Clothregister = () => {
       "PADDING",
     ],
     TOP: [
-      "T_SHIRT", // 반팔
-      "POLO_SHIRT", // 폴로셔츠
+      "T_SHIRT",
+      "POLO_SHIRT",
       "LONG_SLEEVE",
       "D_SHIRT",
       "HOODIE",
@@ -40,7 +41,7 @@ const Clothregister = () => {
       "SWEAT_PANTS",
       "COTTON_PANTS",
       "SLACKS",
-      "LINEN_PANTS", // 얇은 바지
+      "LINEN_PANTS",
       "SHORTS",
     ],
   };
@@ -63,24 +64,59 @@ const Clothregister = () => {
     "CREAM",
   ];
 
-  // 두께 선택 옵션 동적 설정
   const getDegreeOptions = () => {
     if (largeCategory === "TOP") {
       if (smallCategory === "T_SHIRT" || smallCategory === "POLO_SHIRT") {
-        return ["NORMAL"]; // 반팔, 폴로셔츠는 NORMAL만
+        return ["NORMAL"];
       } else {
-        return ["THIN", "NORMAL", "THICK"]; // 나머지 상의
+        return ["THIN", "NORMAL", "THICK"];
       }
     } else if (largeCategory === "BOTTOM") {
       if (smallCategory === "LINEN_PANTS") {
-        return ["THIN"]; // 얇은 바지는 THIN만
+        return ["THIN"];
       } else {
-        return ["THIN", "LTHIN", "NORMAL", "LTHICK", "THICK"]; // 나머지 하의
+        return ["THIN", "LTHIN", "NORMAL", "LTHICK", "THICK"];
       }
     } else if (largeCategory === "OUTER") {
-      return ["THIN", "NORMAL", "THICK"]; // 아우터는 3가지
+      return ["THIN", "NORMAL", "THICK"];
     }
-    return []; // 기본값
+    return [];
+  };
+
+  const fetchImageFromLink = async (url) => {
+    try {
+      const response = await axios.post(
+        `https://moipzy.shop/moipzy/crawling/musinsa?url=${encodeURIComponent(url)}`, // 쿼리 파라미터로 URL 전달
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const { productName, imageUrl } = response.data;
+      setProductName(productName); 
+      setPreview(imageUrl); 
+
+      // 이미지 URL을 Blob으로 변환하여 file로 저장
+      const responseBlob = await fetch(imageUrl);
+      const blob = await responseBlob.blob();
+      const fileName = imageUrl.split("/").pop();
+      const file = new File([blob], fileName, { type: blob.type });
+      setFile(file);
+    } catch (error) {
+      console.error("이미지 가져오기 실패:", error.response?.data || error.message);
+      alert("이미지를 가져오는 데 실패했습니다. 링크를 확인하세요.");
+    }
+  };
+
+  const handleLinkChange = (e) => {
+    const inputLink = e.target.value;
+    setLink(inputLink);
+
+    if (inputLink) {
+      fetchImageFromLink(inputLink);
+    }
   };
 
   const handleFileChange = (e) => {
@@ -113,7 +149,7 @@ const Clothregister = () => {
       largeCategory,
       smallCategory,
       color,
-      degree,
+      degree, // 상품명은 제외
     };
 
     formData.append(
@@ -163,8 +199,13 @@ const Clothregister = () => {
               type="text"
               placeholder="링크를 입력하세요"
               value={link}
-              onChange={(e) => setLink(e.target.value)}
+              onChange={handleLinkChange}
             />
+          </div>
+
+          <div className="form-group">
+            <label>상품명</label>
+            <input type="text" value={productName} readOnly />
           </div>
         </div>
 
@@ -176,8 +217,8 @@ const Clothregister = () => {
                 value={largeCategory}
                 onChange={(e) => {
                   setLargeCategory(e.target.value);
-                  setSmallCategory(""); // 대분류 변경 시 소분류 초기화
-                  setDegree(""); // 두께 초기화
+                  setSmallCategory("");
+                  setDegree("");
                 }}
               >
                 <option value="">선택</option>
@@ -193,7 +234,7 @@ const Clothregister = () => {
                 value={smallCategory}
                 onChange={(e) => {
                   setSmallCategory(e.target.value);
-                  setDegree(""); // 소분류 변경 시 두께 초기화
+                  setDegree("");
                 }}
                 disabled={!largeCategory}
               >
