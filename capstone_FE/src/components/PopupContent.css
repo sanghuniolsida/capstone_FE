@@ -22,7 +22,6 @@
 }
 
 .clothing-item {
-  height: 100px;
   object-fit: contain;
   margin-bottom: 10px;
 }
@@ -85,6 +84,7 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-left: 170px;
 }
 
 .submit-button:hover {
@@ -95,6 +95,5 @@
 
 .recommendation-text {
   margin-top: 60px;
-  
   font-size: 13px;
 }
