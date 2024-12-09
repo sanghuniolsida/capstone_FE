@@ -6,6 +6,7 @@ import './Country.css';
 import { getLocationKeyAPI, get5DayWeatherAPI } from '../../api/weather';
 import { GiWorld } from "react-icons/gi";
 import { motion } from "framer-motion";
+import axios from 'axios';
 
 
 const Country = () => {
@@ -14,12 +15,11 @@ const Country = () => {
   const [locationKey, setLocationKey] = useState(null);
   const [weatherData, setWeatherData] = useState([]);
   const [error, setError] = useState(null);
-
-  const clothesCategories = {
-    상의: ['상의 이미지1 URL', '상의 이미지2 URL'],
-    하의: ['하의 이미지1 URL', '하의 이미지2 URL'],
-    아우터: ['아우터 이미지1 URL', '아우터 이미지2 URL'],
-  };
+  const [clothesCategories, setClothesCategories] = useState({
+    상의: [],
+    하의: [],
+    아우터: [],
+  });
 
   const countryCityMap = {
     '일본': ['도쿄', '오사카', '후쿠오카', '삿포로', '교토'],
@@ -58,10 +58,9 @@ const Country = () => {
   // 국가 선택 시 도시 목록 초기화
   const handleSelectCountry = (selectedCountry) => {
     setCountry(selectedCountry);
-    setCity(''); // 도시 선택 초기화
+    setCity(''); 
   };
 
-  // 도시 선택 시 locationKey를 가져옴
   const handleSelectCity = (selectedCity) => {
     setCity(selectedCity);
     let latitude = 0;
@@ -533,6 +532,40 @@ const Country = () => {
       });
   };
 
+  const fetchClothingRecommendations = async (highTempAvg, lowTempAvg) => {
+    try {
+      const baseUrl = "https://moipzy.shop/moipzy/style/recommend";
+      const userId = localStorage.getItem("userId");
+      const eventParam = "일반";
+      const url = `${baseUrl}?userId=${userId}&highTemp=${highTempAvg}&lowTemp=${lowTempAvg}&event=${eventParam}`;
+  
+      const response = await axios.get(url);
+      const recommendations = response.data;
+  
+      const topRecommendations = recommendations
+        .filter((item) => item.topImgPath)
+        .slice(0, 2)
+        .map((item) => item.topImgPath);
+      const bottomRecommendations = recommendations
+        .filter((item) => item.bottomImgPath)
+        .slice(0, 2)
+        .map((item) => item.bottomImgPath);
+      const outerRecommendations = recommendations
+        .filter((item) => item.outerImgPath)
+        .slice(0, 2)
+        .map((item) => item.outerImgPath);
+  
+      setClothesCategories({
+        상의: topRecommendations,
+        하의: bottomRecommendations,
+        아우터: outerRecommendations,
+      });
+    } catch (error) {
+      alert("추천 데이터를 가져오는 중 문제가 발생했습니다.");
+    }
+  };
+  
+
   // 5일치 날씨 데이터 
   useEffect(() => {
     if (locationKey) {
@@ -549,6 +582,24 @@ const Country = () => {
         });
     }
   }, [locationKey]);
+
+  useEffect(() => {
+    if (weatherData.length > 0) {
+      const { highTempAvg, lowTempAvg } = calculateAverageTemperature(weatherData);
+      fetchClothingRecommendations(highTempAvg, lowTempAvg);
+    }
+  }, [weatherData]);
+  
+  const calculateAverageTemperature = (weatherData) => {
+    const fahrenheitToCelsius = (temp) => ((temp - 32) * 5) / 9;
+    const highTemps = weatherData.map((day) => fahrenheitToCelsius(day.Temperature.Maximum.Value));
+    const lowTemps = weatherData.map((day) => fahrenheitToCelsius(day.Temperature.Minimum.Value));
+    const highTempAvg = Math.round(highTemps.reduce((sum, temp) => sum + temp, 0) / highTemps.length);
+    const lowTempAvg = Math.round(lowTemps.reduce((sum, temp) => sum + temp, 0) / lowTemps.length);
+  
+    return { highTempAvg, lowTempAvg };
+  };
+  
 
   return (
     <Sidebar>

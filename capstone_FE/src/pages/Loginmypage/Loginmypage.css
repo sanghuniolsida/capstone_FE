@@ -136,19 +136,40 @@
   }
   
   .recommendation-header {
-    font-size: 15px; /* 텍스트 크기 */
+    font-size: 15px; 
     font-weight: bold;
-    color: #fff; /* 텍스트 색상 */
-    text-shadow: 0 0 5px #fff, 0 0 10px rgb(252, 0, 252), 0 0 20px #f0f, 0 0 30px #ff0, 0 0 40px #ff0, 0 0 50px #ff0, 0 0 60px #ff0;
+    color: #f6ebeb; 
+    text-shadow: 
+      0 0 5px #333, 
+      0 0 10px #000, 
+      0 0 20px #333, 
+      0 0 30px #000, 
+      0 0 40px #333,
+      0 0 50px #000, 
+      0 0 60px #333; 
     animation: shine 2s infinite alternate;
   }
   
   @keyframes shine {
     0% {
-      text-shadow: 0 0 5px #fff, 0 0 10px #f0f, 0 0 20px #f0f, 0 0 30px #ff0, 0 0 40px #ff0, 0 0 50px #ff0, 0 0 60px #ff0;
+      text-shadow: 
+        0 0 5px #000, 
+        0 0 10px #333, 
+        0 0 20px #000, 
+        0 0 30px #333, 
+        0 0 40px #000, 
+        0 0 50px #333, 
+        0 0 60px #000; 
     }
     100% {
-      text-shadow: 0 0 5px #ff0, 0 0 10px #ff0, 0 0 20px #f0f, 0 0 30px #f0f, 0 0 40px #fff, 0 0 50px #fff, 0 0 60px #fff;
+      text-shadow: 
+        0 0 5px #333, 
+        0 0 10px #000,
+        0 0 20px #333, 
+        0 0 30px #000, 
+        0 0 40px #333, 
+        0 0 50px #000, 
+        0 0 60px #333; 
     }
   }
   
