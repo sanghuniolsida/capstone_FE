@@ -35,25 +35,24 @@
   }
   
   .arrow.right {
-    right: -5px;
+    right: -4px;
   }
   
-  /* 옷 사진 박스 */
   .clothing-box {
     display: flex;
     overflow-x: scroll;
     scroll-behavior: smooth;
     gap: 10px;
-    padding: 10px;
+    padding: 20px;
   }
   
   .clothing-box::-webkit-scrollbar {
-    display: none; /* 스크롤바 숨김 */
+    display: none; /* 스크롤바 숨기기 */
   }
   
   .clothing-item {
     flex: 0 0 150px; 
-    height: 200px;
+    height: 160px;
     border: 1px solid #ddd;
     border-radius: 10px;
     background-color: #f9f9f9;

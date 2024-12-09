@@ -1,133 +1,123 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Feedback.css";
 import axios from "axios";
 
-const Feedback = ({ userId, onClose }) => {
+const Feedback = ({ onClose }) => {
+  const [registeredStyle, setRegisteredStyle] = useState(null);
   const [feedback, setFeedback] = useState("");
-  const [recommendation, setRecommendation] = useState(null);
 
   useEffect(() => {
-    // 등록했던 옷차림 불러오기 API 호출
-    const fetchClothingStyle = async () => {
+    const fetchStyleData = async () => {
       try {
-        const response = await axios.get(`https://moipzy.shop/moipzy/style/${userId}`);
-        setRecommendation(response.data); // 옷차림 데이터 저장
+        const userId = localStorage.getItem("userId");
+        const todayDate = new Date().toISOString().split("T")[0];
+        if (!userId) {
+          throw new Error("로그인 정보가 없습니다.");
+        }
+
+        const response = await axios.get(
+          `https://moipzy.shop/moipzy/style/${userId}?date=${todayDate}`
+        );
+        setRegisteredStyle(response.data);
       } catch (error) {
-        console.error("옷차림 데이터 요청 실패:", error.response || error.message);
-        alert("옷차림 데이터를 가져오는 중 오류가 발생했습니다.");
+        console.error("옷차림 데이터 불러오기 실패:", error.response || error.message);
+        alert("옷차림 데이터를 불러오는 중 오류가 발생했습니다.");
       }
     };
 
-    fetchClothingStyle();
-  }, [userId]);
-
-  const handleFeedbackChange = (e) => {
-    setFeedback(e.target.value);
-  };
+    fetchStyleData();
+  }, []);
 
   const handleFeedbackSubmit = async () => {
-    if (!recommendation) {
-      alert("옷차림 데이터가 없습니다. 다시 시도해 주세요.");
-      return;
-    }
-
     try {
-      // 피드백 저장 API 호출 (PATCH)
       const feedbackData = {
-        styleId: recommendation.styleId,
-        outerId: recommendation.outerId,
-        topId: recommendation.topId,
-        bottomId: recommendation.bottomId,
-        feedback: feedback.toUpperCase(), // "HOT", "SATISFIED", "COLD"
+        styleId: registeredStyle.styleId,
+        outerId: registeredStyle.outerId,
+        topId: registeredStyle.topId,
+        bottomId: registeredStyle.bottomId,
+        feedback: feedback.toUpperCase(),
       };
+      console.log("보낼 데이터:", feedbackData);
 
       await axios.patch("https://moipzy.shop/moipzy/style/feedback", feedbackData, {
         headers: { "Content-Type": "application/json" },
       });
       alert("피드백 저장 완료!");
-      onClose(); // 팝업 닫기
+      onClose(); 
     } catch (error) {
       console.error("피드백 저장 실패:", error.response || error.message);
       alert("피드백 저장 중 오류가 발생했습니다.");
     }
   };
 
-  if (!recommendation) {
-    return <div className="feedback-layout">로딩 중...</div>;
-  }
-
   return (
-    <div className="feedback-layout">
-      {/* 옷 상세 정보 */}
-      <div className="clothing-info-section">
-        <h4>★ 옷 상세 정보</h4>
-        <ul>
-          <li>※ 아우터: {recommendation.outerId ? "등록됨" : "정보 없음"}</li>
-          <li>※ 상의: {recommendation.topId ? "등록됨" : "정보 없음"}</li>
-          <li>※ 하의: {recommendation.bottomId ? "등록됨" : "정보 없음"}</li>
-          <li>※ 최고 온도: {recommendation.highTemp || "정보 없음"}°C</li>
-          <li>※ 최저 온도: {recommendation.lowTemp || "정보 없음"}°C</li>
-        </ul>
-      </div>
-
-      {/* 옷차림 피드백 */}
-      <div className="feedback-section">
-        <h4>★ 옷차림 피드백</h4>
-        <div className="feedback-options">
-          <label>
-            <input
-              type="radio"
-              name="feedback"
-              value="HOT"
-              onChange={handleFeedbackChange}
+    <div className="popup-layout1">
+      {registeredStyle ? (
+        <>
+          <div className="clothing-images1">
+            <img
+              src={`https://moipzy.shop${registeredStyle.outerImgPath}`}
+              alt="아우터"
+              className="clothing-image1"
             />
-            HOT
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="feedback"
-              value="SATISFIED"
-              onChange={handleFeedbackChange}
+            <img
+              src={`https://moipzy.shop${registeredStyle.topImgPath}`}
+              alt="상의"
+              className="clothing-image1"
             />
-            SATISFIED
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="feedback"
-              value="COLD"
-              onChange={handleFeedbackChange}
+            <img
+              src={`https://moipzy.shop${registeredStyle.bottomImgPath}`}
+              alt="하의"
+              className="clothing-image1"
             />
-            COLD
-          </label>
-        </div>
-      </div>
+          </div>
 
-      <div className="button-section">
-        <button className="submit-button" onClick={handleFeedbackSubmit}>
-          피드백 등록
-        </button>
-      </div>
-
-      {/* 옷 이미지 섹션 */}
-      <div className="clothing-image-section">
-        <img
-          src={recommendation.outerImgPath || "/images/placeholder_outer.png"}
-          alt="Outerwear"
-          className="clothing-item"
-        />
-        <img
-          src={recommendation.topImgPath || "/images/placeholder_top.png"}
-          alt="Top"
-          className="clothing-item"
-        />
-        <img
-          src={recommendation.bottomImgPath || "/images/placeholder_bottom.png"}
-          alt="Bottom"
-          className="clothing-item"
-        />
-      </div>
+          <div className="right-section1">
+            <div className="feedback-section1">
+              <h4>★ 옷차림 피드백</h4>
+              <p className="feedback-instruction1">
+                오늘의 옷차림은 어땠나요? 다음번 추천은 피드백을 반영하여 추천합니다.
+              </p>
+              <div className="feedback-options1">
+                <label>
+                  <input
+                    type="radio"
+                    name="feedback"
+                    value="HOT"
+                    onChange={(e) => setFeedback(e.target.value)}
+                  />
+                  HOT
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="feedback"
+                    value="SATISFIED"
+                    onChange={(e) => setFeedback(e.target.value)}
+                  />
+                  SATISFIED
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="feedback"
+                    value="COLD"
+                    onChange={(e) => setFeedback(e.target.value)}
+                  />
+                  COLD
+                </label>
+              </div>
+            </div>
+            <div className="button-section1">
+              <button className="submit-button1" onClick={handleFeedbackSubmit}>
+                피드백 등록
+              </button>
+            </div>
+          </div>
+        </>
+      ) : (
+        <p>로딩 중...</p>
+      )}
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "../../components2/Sidebar";
 import Popup from "../../components/Popup";
 import PopupContent from "../../components/PopupContent";
+import Feedback from "../../pages/Feedback";
 import "./Loginmypage.css";
 import { getLocationAPI, getWeatherAPI, getTodaywWeatherAPI } from "../../api/weather";
 import { FaMapMarkerAlt } from "react-icons/fa";
@@ -21,6 +22,7 @@ const Loginmypage = () => {
   const [clothingRecommendations, setClothingRecommendations] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedRecommendation, setSelectedRecommendation] = useState("");
+  const [isMoipzyPopupOpen, setIsMoipzyPopupOpen] = useState(false);
   const [error, setError] = useState(null);
 
   // 화씨->섭씨 변환 함수
@@ -50,7 +52,7 @@ const Loginmypage = () => {
           setUsername(decodeURIComponent(usernameDecoded));
           setLoginType(loginTypeDecoded); 
 
-          alert(`${decodeURIComponent(usernameDecoded)}님, 로그인 되었습니다.`);
+          //alert(`${decodeURIComponent(usernameDecoded)}님, 로그인 되었습니다.`);
 
           // URL에서 쿼리 파라미터 제거
           navigate("/loginmypage", { replace: true });
@@ -77,13 +79,12 @@ const Loginmypage = () => {
     processTokenAndUserDetails();
   }, [location, navigate]);
 
-  // 캘린더 데이터 요청
   useEffect(() => {
     if (loginType === "google") {
       const fetchCalendarEvents = async () => {
         const token = localStorage.getItem("jwtToken");
         const userId = localStorage.getItem("userId");
-        const todayDate = new Date().toISOString().split("T")[0]; // 오늘 날짜 (YYYY-MM-DD)
+        const todayDate = new Date().toISOString().split("T")[0];
   
         if (token && userId) {
           try {
@@ -251,6 +252,15 @@ const Loginmypage = () => {
     closePopup();
   };
 
+  const openMoipzyPopup = () => {
+    setIsMoipzyPopupOpen(true);
+  };
+  
+  const closeMoipzyPopup = () => {
+    setIsMoipzyPopupOpen(false);
+  };
+  
+
   return (
     <Sidebar>
       <div className="loginmypage-content">
@@ -359,16 +369,22 @@ const Loginmypage = () => {
             content={
               selectedRecommendation && (
                 <PopupContent
-                  recommendation={selectedRecommendation} // 선택된 추천 데이터를 팝업에 전달
+                  recommendation={selectedRecommendation} 
                   onSubmit={handleFeedbackSubmit}
                   onClose={closePopup}
                 />
               )
             }
           />
-       {/* 오른쪽 하단에 고정된 버튼 */}
-        <button className="floating-button" onClick={() => alert("버튼 클릭!")}>
-        TODAY MOIPZY
+
+          <Popup
+            isOpen={isMoipzyPopupOpen}
+            onClose={closeMoipzyPopup}
+            content={<Feedback onClose={closeMoipzyPopup} />}
+          />
+
+        <button className="floating-button" onClick={openMoipzyPopup}>
+          TODAY MOIPZY
         </button>
       </div>
     </Sidebar>

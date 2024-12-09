@@ -30,7 +30,7 @@ const GoogleCallback = () => {
             localStorage.setItem("userId", userId); 
             localStorage.setItem("username", username);
 
-            alert(`${username}님, 로그인 성공!`);
+            //alert(`${username}님, 로그인 성공!`);
             navigate("/loginmypage"); // 로그인 성공 후 리다이렉트
           } else {
             alert("로그인 토큰을 받지 못했습니다.");

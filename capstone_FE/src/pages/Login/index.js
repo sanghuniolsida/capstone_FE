@@ -44,7 +44,7 @@ const Login = () => {
           localStorage.setItem("username", username);
           localStorage.setItem("userId", userId); 
 
-          alert(`${username}님, 로그인 성공!`);
+          //alert(`${username}님, 로그인 성공!`);
           navigate("/loginmypage");
         } catch (decodeError) {
           console.error("JWT 디코딩 오류:", decodeError);

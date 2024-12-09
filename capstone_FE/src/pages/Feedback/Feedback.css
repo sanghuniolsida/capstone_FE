@@ -1,58 +1,71 @@
-.feedback-layout {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  
-  .clothing-info-section {
-    margin-bottom: 20px;
-    width: 100%;
-  }
-  
-  .feedback-section {
-    margin-bottom: 20px;
-    width: 100%;
-  }
-  
-  .feedback-options label {
-    margin-right: 10px;
-    display: inline-block;
-  }
-  
-  .button-section {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-  }
-  
-  .submit-button {
-    padding: 10px 20px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .submit-button:hover {
-    background: #0056b3;
-  }
-  
-  .clothing-image-section {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
-  }
-  
-  .clothing-item {
-    max-width: 100px;
-    max-height: 100px;
-    object-fit: cover;
-  }
-  
+.popup-layout1 {
+  display: flex;
+  padding: 20px;
+  gap: 20px;
+}
+
+.clothing-images1 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.clothing-image1 {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.right-section1 {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.feedback-section1 {
+  background-color: #f5f5f5;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.feedback-options1 {
+  display: flex;
+  gap: 10px;
+}
+
+.feedback-options1 label {
+  display: flex;
+  align-items: center;
+}
+
+.button-section1 {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 270px;
+}
+
+.submit-button1 {
+  padding: 10px 15px;
+  background-color: rgb(100, 96, 206) !important; 
+  color: #fff;
+  width: 85px !important;
+  height: 55px; 
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.submit-button1:hover {
+  background-color: #b97b7b !important; 
+  transform: scale(1.05); 
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
