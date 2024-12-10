@@ -95,7 +95,7 @@ const Feedback = ({ onClose }) => {
                     value="SATISFIED"
                     onChange={(e) => setFeedback(e.target.value)}
                   />
-                  NORMAL
+                  GOOD
                 </label>
                 <label>
                   <input
