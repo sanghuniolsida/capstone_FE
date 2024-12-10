@@ -31,7 +31,7 @@
   }
   
   .clothes-category {
-    background: #dcdcdc;
+    background: #f4f4f4;
     border-radius: 10px;
     padding: 15px;
     flex: 1;
@@ -50,15 +50,15 @@
     display: flex;
     justify-content: center;
     width: 250px;
-    margin-left: 24px;
+    margin-left: 30px;
   }
   
   .clothes-item img {
-    width: 150px;
-    height: 150px;
+    width: 160px;
+    height: 190px;
     object-fit: cover;
     border-radius: 10px;
-    margin-left: 20px;
+    margin-left: 40px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   

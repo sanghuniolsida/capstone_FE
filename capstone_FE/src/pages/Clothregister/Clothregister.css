@@ -5,8 +5,8 @@
     padding: 20px;
     box-sizing: border-box;
     justify-content: space-between;
-    width: 80%;
-    height: 600px;
+    width: 85%;
+    height: 80%;
   }
   
   /* 왼쪽 패널 */
@@ -87,6 +87,7 @@
     border-radius: 5px;
     cursor: pointer;
     align-self: flex-end;
+    margin-top: 110px;
   }
   
   .submit-button:hover {
