@@ -1,13 +1,13 @@
 .weather-box {
-    position: absolute; /* 상단에 고정하기 위해 position 속성 사용 */
-    top: 120px; /* 페이지 최상단에서 20px 아래에 위치하도록 설정 */
+    position: absolute; 
+    top: 120px; 
     left: 50%;
-    transform: translateX(-50%); /* 중앙 정렬 */
-    background: #ffffff; /* 배경색 설정 */
+    transform: translateX(-50%); 
+    background: #ffffff; 
     width: 30%;
     padding: 15px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
     z-index: 1000; /* 헤더나 다른 요소들 위에 위치할 수 있도록 z-index 설정 */
   }
 
@@ -50,15 +50,15 @@
   
   .current-date {
     font-size: 0.9rem;
-    color: #666; /* 약간의 회색으로 날짜 표시 */
-    margin-top: 4px; /* 위치 정보와 날짜 사이의 간격 */
+    color: #666; 
+    margin-top: 4px; 
     text-align: center;
   }
 
   .buttons-container {
     display: flex;
-    gap: 15px; /* Adjust the spacing between buttons */
-    justify-content: center; /* Center the buttons within the container */
-    margin-top: 10px; /* Add some margin above the buttons */
+    gap: 15px; 
+    justify-content: center; 
+    margin-top: 10px; 
   }
   

@@ -121,11 +121,9 @@ const Loginmypage = () => {
                 }))
               );
             } else {
-              console.warn("예상치 못한 데이터 구조:", response.data);
               setCalendarEvents([]);
             }
           } catch (error) {
-            console.error("캘린더 데이터 요청 실패:", error);
             setCalendarEvents([]);
           }
         }
