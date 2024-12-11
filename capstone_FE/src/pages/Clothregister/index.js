@@ -96,15 +96,12 @@ const Clothregister = () => {
       );
       const { productName, imageUrl } = response.data;
   
-      // 상품명과 이미지 설정
       setProductName(productName);
       setPreview(imageUrl);
   
-      // 상품명 검사 로직
       const setCategoryByKeywords = (name) => {
-        const lowerName = name.toLowerCase(); // 소문자로 변환
+        const lowerName = name.toLowerCase(); 
   
-        // 상의
         if (
           /맨투맨|스웨트셔츠|sweatshirt|sweat shirt|크루넥/.test(lowerName)
         ) {
@@ -123,7 +120,6 @@ const Clothregister = () => {
           setLargeCategory("TOP");
           setSmallCategory("HOODIE");
         }
-        // 아우터
         else if (/cardigan|가디건|카디건/.test(lowerName)) {
           setLargeCategory("OUTER");
           setSmallCategory("CARDIGAN");
@@ -152,7 +148,6 @@ const Clothregister = () => {
           setLargeCategory("OUTER");
           setSmallCategory("PADDING");
         }
-        // 하의
         else if (/데님팬츠|denim|데님/.test(lowerName)) {
           setLargeCategory("BOTTOM");
           setSmallCategory("JEANS");
@@ -174,10 +169,8 @@ const Clothregister = () => {
         }
       };
   
-      // 카테고리 자동 설정
       setCategoryByKeywords(productName);
   
-      // 이미지 파일 생성 및 설정
       const responseBlob = await fetch(imageUrl);
       const blob = await responseBlob.blob();
       const fileName = imageUrl.split("/").pop();
@@ -230,7 +223,7 @@ const Clothregister = () => {
       largeCategory,
       smallCategory,
       color,
-      degree, // 상품명은 제외
+      degree, 
     };
 
     formData.append(
