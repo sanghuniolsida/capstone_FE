@@ -107,6 +107,9 @@ const Clothregister = () => {
         ) {
           setLargeCategory("TOP");
           setSmallCategory("SWEAT_SHIRT");
+        } else if (/니트|니티드|KNIT|knit/.test(lowerName)) {
+          setLargeCategory("TOP");
+          setSmallCategory("KNIT");
         } else if (/반팔/.test(lowerName)) {
           setLargeCategory("TOP");
           setSmallCategory("T_SHIRT");
@@ -120,7 +123,7 @@ const Clothregister = () => {
           setLargeCategory("TOP");
           setSmallCategory("HOODIE");
         }
-        else if (/cardigan|가디건|카디건/.test(lowerName)) {
+          else if (/cardigan|가디건|카디건/.test(lowerName)) {
           setLargeCategory("OUTER");
           setSmallCategory("CARDIGAN");
         } else if (/블루종/.test(lowerName)) {
@@ -148,7 +151,7 @@ const Clothregister = () => {
           setLargeCategory("OUTER");
           setSmallCategory("PADDING");
         }
-        else if (/데님팬츠|denim|데님/.test(lowerName)) {
+          else if (/데님팬츠|denim|데님/.test(lowerName)) {
           setLargeCategory("BOTTOM");
           setSmallCategory("JEANS");
         } else if (/트레이닝/.test(lowerName)) {

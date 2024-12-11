@@ -14,16 +14,20 @@ const Loginmypage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [username, setUsername] = useState("");
-  const [loginType, setLoginType] = useState(""); 
+  const [loginType, setLoginType] = useState("");
   const [locationData, setLocationData] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
-  const [dailyWeatherData, setDailyWeatherData] = useState(null); 
-  const [calendarEvents, setCalendarEvents] = useState([]); 
+  const [dailyWeatherData, setDailyWeatherData] = useState(null);
+  const [calendarEvents, setCalendarEvents] = useState([]);
   const [clothingRecommendations, setClothingRecommendations] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedRecommendation, setSelectedRecommendation] = useState("");
   const [isMoipzyPopupOpen, setIsMoipzyPopupOpen] = useState(false);
   const [error, setError] = useState(null);
+
+  // 데이터 로드 상태를 추적하기 위한 상태 변수
+  const [isWeatherDataLoaded, setIsWeatherDataLoaded] = useState(false);
+  const [isCalendarDataLoaded, setIsCalendarDataLoaded] = useState(true); // 기본값 true, 로그인 타입이 'google'이면 false로 설정
 
   // 화씨->섭씨 변환 함수
   const fahrenheitToCelsius = (fahrenheit) => {
@@ -42,17 +46,20 @@ const Loginmypage = () => {
 
           const decodedToken = jwtDecode(token);
           const userId = decodedToken.userId;
-          const loginTypeDecoded = decodedToken.loginType; 
+          const loginTypeDecoded = decodedToken.loginType;
           const usernameDecoded = usernameParam || decodedToken.username || "사용자";
 
           localStorage.setItem("userId", userId);
           localStorage.setItem("username", decodeURIComponent(usernameDecoded));
-          localStorage.setItem("loginType", loginTypeDecoded); 
+          localStorage.setItem("loginType", loginTypeDecoded);
 
           setUsername(decodeURIComponent(usernameDecoded));
-          setLoginType(loginTypeDecoded); 
+          setLoginType(loginTypeDecoded);
 
-          //alert(`${decodeURIComponent(usernameDecoded)}님, 로그인 되었습니다.`);
+          // 로그인 타입에 따라 캘린더 데이터 로드 여부 초기화
+          if (loginTypeDecoded === "google") {
+            setIsCalendarDataLoaded(false);
+          }
 
           // URL에서 쿼리 파라미터 제거
           navigate("/loginmypage", { replace: true });
@@ -69,6 +76,11 @@ const Loginmypage = () => {
         if (storedToken && storedUsername) {
           setUsername(storedUsername);
           setLoginType(storedLoginType || "");
+
+          // 로그인 타입에 따라 캘린더 데이터 로드 여부 초기화
+          if (storedLoginType === "google") {
+            setIsCalendarDataLoaded(false);
+          }
         } else {
           alert("로그인이 필요합니다.");
           navigate("/login");
@@ -79,13 +91,14 @@ const Loginmypage = () => {
     processTokenAndUserDetails();
   }, [location, navigate]);
 
+  // 캘린더 데이터 가져오기
   useEffect(() => {
     if (loginType === "google") {
       const fetchCalendarEvents = async () => {
         const token = localStorage.getItem("jwtToken");
         const userId = localStorage.getItem("userId");
         const todayDate = new Date().toISOString().split("T")[0];
-  
+
         if (token && userId) {
           try {
             const response = await axios.get(
@@ -96,13 +109,13 @@ const Loginmypage = () => {
                 },
               }
             );
-  
+
             console.log("캘린더 응답 데이터:", response.data);
-  
+
             if (typeof response.data === "string") {
               const eventsArray = response.data
-                .split("\n") 
-                .filter((event) => event.trim() !== "") 
+                .split("\n")
+                .filter((event) => event.trim() !== "")
                 .map((event) => {
                   const cleanEvent = event.trim().replace(/^-/, "").trim();
                   const [title, timeRange] = cleanEvent.split(" (");
@@ -111,12 +124,12 @@ const Loginmypage = () => {
                     time: timeRange?.replace(")", "").trim() || "",
                   };
                 });
-  
+
               setCalendarEvents(eventsArray);
             } else if (Array.isArray(response.data.events)) {
               setCalendarEvents(
                 response.data.events.map((event) => ({
-                  title: event.title.replace(/^-/, "").trim(), 
+                  title: event.title.replace(/^-/, "").trim(),
                   time: event.time || "",
                 }))
               );
@@ -125,14 +138,19 @@ const Loginmypage = () => {
             }
           } catch (error) {
             setCalendarEvents([]);
+          } finally {
+            setIsCalendarDataLoaded(true); // 캘린더 데이터 로드 완료
           }
+        } else {
+          setIsCalendarDataLoaded(true); // 토큰이나 유저 ID가 없을 경우에도 로드 완료로 간주
         }
       };
-  
+
       fetchCalendarEvents();
+    } else {
+      setIsCalendarDataLoaded(true); // 로그인 타입이 구글이 아니면 캘린더 데이터 로드 완료로 간주
     }
   }, [loginType]);
-  
 
   // 위치 정보 가져오기
   useEffect(() => {
@@ -195,9 +213,10 @@ const Loginmypage = () => {
           if (res.DailyForecasts && res.DailyForecasts.length > 0) {
             const forecast = res.DailyForecasts[0];
             setDailyWeatherData({
-              maxTemp: fahrenheitToCelsius(forecast.Temperature.Maximum.Value).toFixed(1), 
-              minTemp: fahrenheitToCelsius(forecast.Temperature.Minimum.Value).toFixed(1), 
+              maxTemp: fahrenheitToCelsius(forecast.Temperature.Maximum.Value).toFixed(1),
+              minTemp: fahrenheitToCelsius(forecast.Temperature.Minimum.Value).toFixed(1),
             });
+            setIsWeatherDataLoaded(true); // 날씨 데이터 로드 완료
           }
         })
         .catch(() => {
@@ -206,19 +225,20 @@ const Loginmypage = () => {
     }
   }, [locationData]);
 
-  //옷차림 추천API
+  // 옷차림 추천 API 요청
   useEffect(() => {
     const fetchClothingRecommendations = async () => {
       const userId = localStorage.getItem("userId");
-      const highTemp = Math.round(dailyWeatherData?.maxTemp || 0); 
-      const lowTemp = Math.round(dailyWeatherData?.minTemp || 0); 
+      const highTemp = Math.round(dailyWeatherData?.maxTemp || 0);
+      const lowTemp = Math.round(dailyWeatherData?.minTemp || 0);
       const baseUrl = "https://moipzy.shop/moipzy/style/recommend";
 
       if (userId && highTemp && lowTemp) {
         try {
-          const eventParam = loginType === "google" && calendarEvents.length > 0
-            ? calendarEvents[0]?.title || ""
-            : "일반";
+          const eventParam =
+            loginType === "google" && calendarEvents.length > 0
+              ? calendarEvents[0]?.title || ""
+              : "일반";
           const url = `${baseUrl}?userId=${userId}&highTemp=${highTemp}&lowTemp=${lowTemp}&event=${eventParam}`;
 
           const response = await axios.get(url);
@@ -231,9 +251,10 @@ const Loginmypage = () => {
       }
     };
 
-    fetchClothingRecommendations();
-  }, [dailyWeatherData, loginType, calendarEvents]);
-
+    if (isWeatherDataLoaded && isCalendarDataLoaded) {
+      fetchClothingRecommendations();
+    }
+  }, [isWeatherDataLoaded, isCalendarDataLoaded]);
 
   const handleRecommendationClick = (recommendation) => {
     setSelectedRecommendation(recommendation);
@@ -253,11 +274,10 @@ const Loginmypage = () => {
   const openMoipzyPopup = () => {
     setIsMoipzyPopupOpen(true);
   };
-  
+
   const closeMoipzyPopup = () => {
     setIsMoipzyPopupOpen(false);
   };
-  
 
   return (
     <Sidebar>
@@ -314,72 +334,72 @@ const Loginmypage = () => {
           </div>
         )}
 
-          <div className="clothing-recommendation-section">
-            <div className="recommendation-header">
-              <h3>Today's Clothing Recommendation</h3>
-            </div>
-            <div className="clothing-boxes">
-              {clothingRecommendations.map((recommendation, index) => (
-                <div
-                  className="clothingBox"
-                  key={index}
-                  onClick={() => handleRecommendationClick(recommendation)} // 클릭 시 추천 데이터를 팝업으로 전달
-                >
-                  <h4>추천 {index + 1}</h4>
-                  {/* 상의 */}
-                  <div className="clothingItem">
-                    <div className="clothing-image-container">
-                      <img
-                        src={recommendation.topImgPath || "placeholder_top.png"}
-                        alt="상의 이미지"
-                        className="clothing-image"
-                      />
-                    </div>
-                  </div>
-                  {/* 하의 */}
-                  <div className="clothingItem">
-                    <div className="clothing-image-container">
-                      <img
-                        src={recommendation.bottomImgPath || "placeholder_bottom.png"}
-                        alt="하의 이미지"
-                        className="clothing-image"
-                      />
-                    </div>
-                  </div>
-                  {/* 아우터 */}
-                  <div className="clothingItem">
-                    <div className="clothing-image-container">
-                      <img
-                        src={recommendation.outerImgPath || "placeholder_outer.png"}
-                        alt="아우터 이미지"
-                        className="clothing-image"
-                      />
-                    </div>
+        <div className="clothing-recommendation-section">
+          <div className="recommendation-header">
+            <h3>Today's Clothing Recommendation</h3>
+          </div>
+          <div className="clothing-boxes">
+            {clothingRecommendations.map((recommendation, index) => (
+              <div
+                className="clothingBox"
+                key={index}
+                onClick={() => handleRecommendationClick(recommendation)} // 클릭 시 추천 데이터를 팝업으로 전달
+              >
+                <h4>추천 {index + 1}</h4>
+                {/* 상의 */}
+                <div className="clothingItem">
+                  <div className="clothing-image-container">
+                    <img
+                      src={recommendation.topImgPath || "placeholder_top.png"}
+                      alt="상의 이미지"
+                      className="clothing-image"
+                    />
                   </div>
                 </div>
-              ))}
-            </div>
+                {/* 하의 */}
+                <div className="clothingItem">
+                  <div className="clothing-image-container">
+                    <img
+                      src={recommendation.bottomImgPath || "placeholder_bottom.png"}
+                      alt="하의 이미지"
+                      className="clothing-image"
+                    />
+                  </div>
+                </div>
+                {/* 아우터 */}
+                <div className="clothingItem">
+                  <div className="clothing-image-container">
+                    <img
+                      src={recommendation.outerImgPath || "placeholder_outer.png"}
+                      alt="아우터 이미지"
+                      className="clothing-image"
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
+        </div>
 
-          <Popup
-            isOpen={isPopupOpen}
-            onClose={closePopup}
-            content={
-              selectedRecommendation && (
-                <PopupContent
-                  recommendation={selectedRecommendation} 
-                  onSubmit={handleFeedbackSubmit}
-                  onClose={closePopup}
-                />
-              )
-            }
-          />
+        <Popup
+          isOpen={isPopupOpen}
+          onClose={closePopup}
+          content={
+            selectedRecommendation && (
+              <PopupContent
+                recommendation={selectedRecommendation}
+                onSubmit={handleFeedbackSubmit}
+                onClose={closePopup}
+              />
+            )
+          }
+        />
 
-          <Popup
-            isOpen={isMoipzyPopupOpen}
-            onClose={closeMoipzyPopup}
-            content={<Feedback onClose={closeMoipzyPopup} />}
-          />
+        <Popup
+          isOpen={isMoipzyPopupOpen}
+          onClose={closeMoipzyPopup}
+          content={<Feedback onClose={closeMoipzyPopup} />}
+        />
 
         <button className="floating-button" onClick={openMoipzyPopup}>
           TODAY MOIPZY

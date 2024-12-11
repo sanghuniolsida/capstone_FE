@@ -47,10 +47,12 @@
   }
   
   .clothes-items {
+    margin-left: 35px !important;
     display: flex;
     justify-content: center;
     width: 250px;
     margin-left: 30px;
+    position: fixed;
   }
   
   .clothes-item img {
@@ -58,7 +60,7 @@
     height: 190px;
     object-fit: cover;
     border-radius: 10px;
-    margin-left: 40px;
+    margin-left: 0px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
