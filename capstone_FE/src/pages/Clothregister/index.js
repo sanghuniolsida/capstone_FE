@@ -99,12 +99,42 @@ const Clothregister = () => {
       setProductName(productName);
       setPreview(imageUrl);
   
-      const setCategoryByKeywords = (name) => {
-        const lowerName = name.toLowerCase(); 
+      const colorMapping = {
+        LIGHTGRAY: ["회색", "그레이", "gray", "GRAY", "라이트그레이", "lightgray"],
+        CHARCOAL: ["차콜", "charcoal"],
+        BLUE: ["파란", "블루", "하늘", "blue", "BLUE"],
+        NAVY: ["네이비", "navy"],
+        GREEN: ["초록", "그린", "green", "GREEN"],
+        BLACK: ["검정", "블랙", "black"],
+        WHITE: ["흰색", "화이트", "white"],
+        BEIGE: ["베이지", "beige"],
+        RED: ["와인", "붉은", "레드", "빨간", "red", "RED"],
+        BROWN: ["브라운", "갈색", "brown", "BROWN"],
+        OLIVE: ["올리브", "olive"],
+        KHAKI: ["카키", "khaki"],
+        CREAM: ["크림", "cream", "CREAM"],
+      };
   
-        if (
-          /맨투맨|스웨트셔츠|sweatshirt|sweat shirt|크루넥/.test(lowerName)
-        ) {
+      // 색상 추출 
+      const extractColor = (name) => {
+        const lowerName = name.toLowerCase();
+        for (const [key, keywords] of Object.entries(colorMapping)) {
+          if (keywords.some((keyword) => lowerName.includes(keyword.toLowerCase()))) {
+            return key;
+          }
+        }
+        return "";
+      };
+
+      const detectedColor = extractColor(productName);
+      if (detectedColor) {
+        setColor(detectedColor); 
+      }
+  
+      const setCategoryByKeywords = (name) => {
+        const lowerName = name.toLowerCase();
+  
+        if (/맨투맨|스웨트셔츠|sweatshirt|sweat shirt|크루넥/.test(lowerName)) {
           setLargeCategory("TOP");
           setSmallCategory("SWEAT_SHIRT");
         } else if (/니트|니티드|KNIT|knit/.test(lowerName)) {
@@ -122,8 +152,7 @@ const Clothregister = () => {
         } else if (/후드|후드티|hoodie|후디/.test(lowerName)) {
           setLargeCategory("TOP");
           setSmallCategory("HOODIE");
-        }
-          else if (/cardigan|가디건|카디건/.test(lowerName)) {
+        } else if (/cardigan|가디건|카디건/.test(lowerName)) {
           setLargeCategory("OUTER");
           setSmallCategory("CARDIGAN");
         } else if (/블루종/.test(lowerName)) {
@@ -150,8 +179,7 @@ const Clothregister = () => {
         } else if (/파카|padding|패딩|점퍼|숏패딩|롱패딩|푸퍼/.test(lowerName)) {
           setLargeCategory("OUTER");
           setSmallCategory("PADDING");
-        }
-          else if (/데님팬츠|denim|데님/.test(lowerName)) {
+        } else if (/데님팬츠|denim|데님/.test(lowerName)) {
           setLargeCategory("BOTTOM");
           setSmallCategory("JEANS");
         } else if (/트레이닝/.test(lowerName)) {
@@ -184,8 +212,6 @@ const Clothregister = () => {
       alert("이미지를 가져오는 데 실패했습니다. 링크를 확인하세요.");
     }
   };
-  
-  
 
   const handleLinkChange = (e) => {
     const inputLink = e.target.value;
