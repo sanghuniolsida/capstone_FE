@@ -86,7 +86,7 @@ const Clothregister = () => {
   const fetchImageFromLink = async (url) => {
     try {
       const response = await axios.post(
-        `https://moipzy.shop/moipzy/crawling/musinsa?url=${encodeURIComponent(url)}`, // 쿼리 파라미터로 URL 전달
+        `https://moipzy.shop/moipzy/crawling/musinsa?url=${encodeURIComponent(url)}`,
         {},
         {
           headers: {
@@ -95,10 +95,85 @@ const Clothregister = () => {
         }
       );
       const { productName, imageUrl } = response.data;
-      setProductName(productName); 
-      setPreview(imageUrl); 
-
-      // 이미지 URL을 Blob으로 변환하여 file로 저장
+  
+      setProductName(productName);
+      setPreview(imageUrl);
+  
+      const setCategoryByKeywords = (name) => {
+        const lowerName = name.toLowerCase(); 
+  
+        if (
+          /맨투맨|스웨트셔츠|sweatshirt|sweat shirt|크루넥/.test(lowerName)
+        ) {
+          setLargeCategory("TOP");
+          setSmallCategory("SWEAT_SHIRT");
+        } else if (/니트|니티드|KNIT|knit/.test(lowerName)) {
+          setLargeCategory("TOP");
+          setSmallCategory("KNIT");
+        } else if (/반팔/.test(lowerName)) {
+          setLargeCategory("TOP");
+          setSmallCategory("T_SHIRT");
+        } else if (/폴로|피켓/.test(lowerName)) {
+          setLargeCategory("TOP");
+          setSmallCategory("POLP_SHIRT");
+        } else if (/long sleeve|긴팔|롱슬리브/.test(lowerName)) {
+          setLargeCategory("TOP");
+          setSmallCategory("LONG_SLEEVE");
+        } else if (/후드|후드티|hoodie|후디/.test(lowerName)) {
+          setLargeCategory("TOP");
+          setSmallCategory("HOODIE");
+        }
+          else if (/cardigan|가디건|카디건/.test(lowerName)) {
+          setLargeCategory("OUTER");
+          setSmallCategory("CARDIGAN");
+        } else if (/블루종/.test(lowerName)) {
+          setLargeCategory("OUTER");
+          setSmallCategory("BLOUSON");
+        } else if (/블레이저/.test(lowerName)) {
+          setLargeCategory("OUTER");
+          setSmallCategory("BLAZER");
+        } else if (/후드집업/.test(lowerName)) {
+          setLargeCategory("OUTER");
+          setSmallCategory("HOODED");
+        } else if (/ma-1/.test(lowerName)) {
+          setLargeCategory("OUTER");
+          setSmallCategory("MA1");
+        } else if (/야구점퍼|스타디움|바시티/.test(lowerName)) {
+          setLargeCategory("OUTER");
+          setSmallCategory("STADIUM_JACKET");
+        } else if (/레더|무스탕|트러커|스웨이드/.test(lowerName)) {
+          setLargeCategory("OUTER");
+          setSmallCategory("LEATHER_JACKET");
+        } else if (/더블코트|싱글코트|코트|발마칸|더플/.test(lowerName)) {
+          setLargeCategory("OUTER");
+          setSmallCategory("COAT");
+        } else if (/파카|padding|패딩|점퍼|숏패딩|롱패딩|푸퍼/.test(lowerName)) {
+          setLargeCategory("OUTER");
+          setSmallCategory("PADDING");
+        }
+          else if (/데님팬츠|denim|데님/.test(lowerName)) {
+          setLargeCategory("BOTTOM");
+          setSmallCategory("JEANS");
+        } else if (/트레이닝/.test(lowerName)) {
+          setLargeCategory("BOTTOM");
+          setSmallCategory("SWEAT_PANTS");
+        } else if (/치노|cotton/.test(lowerName)) {
+          setLargeCategory("BOTTOM");
+          setSmallCategory("COTTON_PANTS");
+        } else if (/슬랙스|slacks/.test(lowerName)) {
+          setLargeCategory("BOTTOM");
+          setSmallCategory("SLACKS");
+        } else if (/린넨/.test(lowerName)) {
+          setLargeCategory("BOTTOM");
+          setSmallCategory("LINEN_PANTS");
+        } else if (/쇼츠|써머|7부|반바지/.test(lowerName)) {
+          setLargeCategory("BOTTOM");
+          setSmallCategory("SHORTS");
+        }
+      };
+  
+      setCategoryByKeywords(productName);
+  
       const responseBlob = await fetch(imageUrl);
       const blob = await responseBlob.blob();
       const fileName = imageUrl.split("/").pop();
@@ -109,6 +184,8 @@ const Clothregister = () => {
       alert("이미지를 가져오는 데 실패했습니다. 링크를 확인하세요.");
     }
   };
+  
+  
 
   const handleLinkChange = (e) => {
     const inputLink = e.target.value;
@@ -149,7 +226,7 @@ const Clothregister = () => {
       largeCategory,
       smallCategory,
       color,
-      degree, // 상품명은 제외
+      degree, 
     };
 
     formData.append(
