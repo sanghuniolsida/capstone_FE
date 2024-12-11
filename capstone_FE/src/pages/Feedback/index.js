@@ -92,7 +92,7 @@ const Feedback = ({ onClose }) => {
                   <input
                     type="radio"
                     name="feedback"
-                    value="SATISFIED"
+                    value="GOOD"
                     onChange={(e) => setFeedback(e.target.value)}
                   />
                   GOOD
