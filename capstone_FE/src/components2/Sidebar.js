@@ -7,20 +7,31 @@ const Sidebar = ({ children }) => {
   const [isFlying, setIsFlying] = useState(false);
   const [username, setUsername] = useState(null);
   const navigate = useNavigate();
+  const syncUsername = () => {
+    const storedUsername = localStorage.getItem('username');
+    setUsername(storedUsername);
+  };
 
   useEffect(() => {
-    // localStorage에서 username 확인
-    const storedUsername = localStorage.getItem('username');
-    if (storedUsername) {
-      setUsername(storedUsername);
-    }
+    syncUsername();
+
+    const handleStorageChange = (event) => {
+      if (event.key === 'username') {
+        syncUsername();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   const handleLogout = () => {
     localStorage.clear();
     alert('로그아웃 되었습니다.');
     setUsername(null);
-    navigate('/'); 
+    navigate('/');
   };
 
   const handleCountryClick = () => {
