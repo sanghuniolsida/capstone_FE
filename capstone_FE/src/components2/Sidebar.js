@@ -9,10 +9,12 @@ const Sidebar = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // localStorage에서 username 확인
-    const storedUsername = localStorage.getItem('username');
-    if (storedUsername) {
-      setUsername(storedUsername);
+    try {
+      const storedUsername = localStorage.getItem('username');
+      setUsername(storedUsername || null);
+    } catch (error) {
+      console.error('localStorage 접근 오류:', error);
+      setUsername(null);
     }
   }, []);
 
@@ -20,23 +22,24 @@ const Sidebar = ({ children }) => {
     localStorage.clear();
     alert('로그아웃 되었습니다.');
     setUsername(null);
-    navigate('/'); 
+    navigate('/');
+  };
+
+  const ensureLoggedIn = (callback) => {
+    if (!username) {
+      alert('로그인이 필요합니다.');
+      navigate('/login');
+      return;
+    }
+    callback();
   };
 
   const handleCountryClick = () => {
-    if (!username) {
-      alert('로그인 상태가 아닙니다.');
-      return;
-    }
-    setIsFlying(true);
+    ensureLoggedIn(() => setIsFlying(true));
   };
 
   const handleProtectedNavigation = (path) => {
-    if (!username) {
-      alert('로그인 상태가 아닙니다.');
-      return;
-    }
-    navigate(path);
+    ensureLoggedIn(() => navigate(path));
   };
 
   useEffect(() => {
@@ -98,7 +101,7 @@ const Sidebar = ({ children }) => {
 
       {/* 메인 컨텐츠 */}
       <main className="main-content">
-        {children ? children : (
+        {children || (
           <div>
             <h2>메인 컨텐츠 영역</h2>
             <p>이곳에 페이지의 주요 컨텐츠가 표시됩니다.</p>
