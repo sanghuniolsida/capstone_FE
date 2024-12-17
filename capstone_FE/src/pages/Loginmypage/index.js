@@ -24,12 +24,10 @@ const Loginmypage = () => {
   const [selectedRecommendation, setSelectedRecommendation] = useState("");
   const [isMoipzyPopupOpen, setIsMoipzyPopupOpen] = useState(false);
   const [error, setError] = useState(null);
-
-  // 데이터 로드 상태를 추적하기 위한 상태 변수
   const [isWeatherDataLoaded, setIsWeatherDataLoaded] = useState(false);
-  const [isCalendarDataLoaded, setIsCalendarDataLoaded] = useState(true); // 기본값 true, 로그인 타입이 'google'이면 false로 설정
+  const [isCalendarDataLoaded, setIsCalendarDataLoaded] = useState(true); 
 
-  // 화씨->섭씨 변환 함수
+  // 화씨->섭씨 
   const fahrenheitToCelsius = (fahrenheit) => {
     return ((fahrenheit - 32) * 5) / 9;
   };
@@ -56,7 +54,6 @@ const Loginmypage = () => {
           setUsername(decodeURIComponent(usernameDecoded));
           setLoginType(loginTypeDecoded);
 
-          // 로그인 타입에 따라 캘린더 데이터 로드 여부 초기화
           if (loginTypeDecoded === "google") {
             setIsCalendarDataLoaded(false);
           }
@@ -139,16 +136,16 @@ const Loginmypage = () => {
           } catch (error) {
             setCalendarEvents([]);
           } finally {
-            setIsCalendarDataLoaded(true); // 캘린더 데이터 로드 완료
+            setIsCalendarDataLoaded(true); 
           }
         } else {
-          setIsCalendarDataLoaded(true); // 토큰이나 유저 ID가 없을 경우에도 로드 완료로 간주
+          setIsCalendarDataLoaded(true); 
         }
       };
 
       fetchCalendarEvents();
     } else {
-      setIsCalendarDataLoaded(true); // 로그인 타입이 구글이 아니면 캘린더 데이터 로드 완료로 간주
+      setIsCalendarDataLoaded(true); 
     }
   }, [loginType]);
 
@@ -343,7 +340,7 @@ const Loginmypage = () => {
               <div
                 className="clothingBox"
                 key={index}
-                onClick={() => handleRecommendationClick(recommendation)} // 클릭 시 추천 데이터를 팝업으로 전달
+                onClick={() => handleRecommendationClick(recommendation)} 
               >
                 <h4>추천 {index + 1}</h4>
                 {/* 상의 */}
